@@ -231,36 +231,36 @@ class _SplashScreenState extends State<SplashScreen>
 class PrayerData {
   // شهر سبتمبر (الشهر 9) - محافظة الأقصر (توقيت صيفي معتمد)
   static const List<Map<String, dynamic>> septemberTimes = [
-    {"day": 1, "fajr": "04:08", "sunrise": "05:32", "dhuhr": "12:56", "asr": "15:30", "maghrib": "18:15", "isha": "19:33"},
-    {"day": 2, "fajr": "04:08", "sunrise": "05:32", "dhuhr": "12:56", "asr": "15:29", "maghrib": "18:14", "isha": "19:31"},
-    {"day": 3, "fajr": "04:09", "sunrise": "05:33", "dhuhr": "12:56", "asr": "15:29", "maghrib": "18:13", "isha": "19:30"},
-    {"day": 4, "fajr": "04:10", "sunrise": "05:33", "dhuhr": "12:56", "asr": "15:28", "maghrib": "18:12", "isha": "19:29"},
-    {"day": 5, "fajr": "04:11", "sunrise": "05:34", "dhuhr": "12:56", "asr": "15:27", "maghrib": "18:11", "isha": "19:28"},
-    {"day": 6, "fajr": "04:12", "sunrise": "05:34", "dhuhr": "12:55", "asr": "15:27", "maghrib": "18:10", "isha": "19:27"},
-    {"day": 7, "fajr": "04:13", "sunrise": "05:35", "dhuhr": "12:55", "asr": "15:27", "maghrib": "18:09", "isha": "19:25"},
-    {"day": 8, "fajr": "04:14", "sunrise": "05:35", "dhuhr": "12:55", "asr": "15:26", "maghrib": "18:08", "isha": "19:24"},
-    {"day": 9, "fajr": "04:14", "sunrise": "05:36", "dhuhr": "12:55", "asr": "15:26", "maghrib": "18:07", "isha": "19:23"},
-    {"day": 10, "fajr": "04:15", "sunrise": "05:37", "dhuhr": "12:54", "asr": "15:25", "maghrib": "18:06", "isha": "19:22"},
-    {"day": 11, "fajr": "04:16", "sunrise": "05:37", "dhuhr": "12:54", "asr": "15:25", "maghrib": "18:05", "isha": "19:22"},
-    {"day": 12, "fajr": "04:17", "sunrise": "05:37", "dhuhr": "12:54", "asr": "15:25", "maghrib": "18:05", "isha": "19:20"},
-    {"day": 13, "fajr": "04:19", "sunrise": "05:37", "dhuhr": "12:54", "asr": "15:25", "maghrib": "18:04", "isha": "19:19"},
-    {"day": 14, "fajr": "04:19", "sunrise": "05:37", "dhuhr": "12:53", "asr": "15:23", "maghrib": "18:02", "isha": "19:17"},
-    {"day": 15, "fajr": "04:19", "sunrise": "05:38", "dhuhr": "12:53", "asr": "15:22", "maghrib": "18:01", "isha": "19:16"},
-    {"day": 16, "fajr": "04:20", "sunrise": "05:38", "dhuhr": "12:53", "asr": "15:22", "maghrib": "18:00", "isha": "19:15"},
-    {"day": 17, "fajr": "04:20", "sunrise": "05:39", "dhuhr": "12:52", "asr": "15:21", "maghrib": "17:59", "isha": "19:14"},
-    {"day": 18, "fajr": "04:20", "sunrise": "05:39", "dhuhr": "12:52", "asr": "15:20", "maghrib": "17:57", "isha": "19:12"},
-    {"day": 19, "fajr": "04:20", "sunrise": "05:39", "dhuhr": "12:52", "asr": "15:20", "maghrib": "17:56", "isha": "19:11"},
-    {"day": 20, "fajr": "04:21", "sunrise": "05:40", "dhuhr": "12:51", "asr": "15:20", "maghrib": "17:55", "isha": "19:10"},
-    {"day": 21, "fajr": "04:21", "sunrise": "05:40", "dhuhr": "12:51", "asr": "15:18", "maghrib": "17:53", "isha": "19:08"},
-    {"day": 22, "fajr": "04:21", "sunrise": "05:40", "dhuhr": "12:51", "asr": "15:18", "maghrib": "17:52", "isha": "19:06"},
-    {"day": 23, "fajr": "04:21", "sunrise": "05:41", "dhuhr": "12:51", "asr": "15:17", "maghrib": "17:51", "isha": "19:05"},
-    {"day": 24, "fajr": "04:21", "sunrise": "05:41", "dhuhr": "12:50", "asr": "15:16", "maghrib": "17:50", "isha": "19:04"},
-    {"day": 25, "fajr": "04:22", "sunrise": "05:42", "dhuhr": "12:50", "asr": "15:16", "maghrib": "17:49", "isha": "19:03"},
-    {"day": 26, "fajr": "04:22", "sunrise": "05:42", "dhuhr": "12:50", "asr": "15:16", "maghrib": "17:48", "isha": "19:02"},
-    {"day": 27, "fajr": "04:22", "sunrise": "05:43", "dhuhr": "12:50", "asr": "15:15", "maghrib": "17:47", "isha": "19:01"},
-    {"day": 28, "fajr": "04:23", "sunrise": "05:43", "dhuhr": "12:49", "asr": "15:14", "maghrib": "17:46", "isha": "19:00"},
-    {"day": 29, "fajr": "04:23", "sunrise": "05:43", "dhuhr": "12:49", "asr": "15:13", "maghrib": "17:45", "isha": "18:59"},
-    {"day": 30, "fajr": "04:23", "sunrise": "05:44", "dhuhr": "12:49", "asr": "15:12", "maghrib": "17:44", "isha": "18:58"},
+    {"day": 1, "fajr": "05:08", "sunrise": "06:32", "dhuhr": "12:56", "asr": "16:30", "maghrib": "19:15", "isha": "20:33"},
+    {"day": 2, "fajr": "05:08", "sunrise": "06:32", "dhuhr": "12:56", "asr": "16:29", "maghrib": "19:14", "isha": "20:31"},
+    {"day": 3, "fajr": "05:09", "sunrise": "06:33", "dhuhr": "12:56", "asr": "16:29", "maghrib": "19:13", "isha": "20:30"},
+    {"day": 4, "fajr": "05:10", "sunrise": "06:33", "dhuhr": "12:56", "asr": "16:28", "maghrib": "19:12", "isha": "20:29"},
+    {"day": 5, "fajr": "05:11", "sunrise": "06:34", "dhuhr": "12:56", "asr": "16:27", "maghrib": "19:11", "isha": "20:28"},
+    {"day": 6, "fajr": "05:12", "sunrise": "06:34", "dhuhr": "12:55", "asr": "16:27", "maghrib": "19:10", "isha": "20:27"},
+    {"day": 7, "fajr": "05:13", "sunrise": "06:35", "dhuhr": "12:55", "asr": "16:27", "maghrib": "19:09", "isha": "20:25"},
+    {"day": 8, "fajr": "05:14", "sunrise": "06:35", "dhuhr": "12:55", "asr": "16:26", "maghrib": "19:08", "isha": "20:24"},
+    {"day": 9, "fajr": "05:14", "sunrise": "06:36", "dhuhr": "12:55", "asr": "16:26", "maghrib": "19:07", "isha": "20:23"},
+    {"day": 10, "fajr": "05:15", "sunrise": "06:37", "dhuhr": "12:54", "asr": "16:25", "maghrib": "19:06", "isha": "20:22"},
+    {"day": 11, "fajr": "05:16", "sunrise": "06:37", "dhuhr": "12:54", "asr": "16:25", "maghrib": "19:05", "isha": "20:22"},
+    {"day": 12, "fajr": "05:17", "sunrise": "06:37", "dhuhr": "12:54", "asr": "16:25", "maghrib": "19:05", "isha": "20:20"},
+    {"day": 13, "fajr": "05:19", "sunrise": "06:37", "dhuhr": "12:54", "asr": "16:25", "maghrib": "19:04", "isha": "20:19"},
+    {"day": 14, "fajr": "05:19", "sunrise": "06:37", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:02", "isha": "20:17"},
+    {"day": 15, "fajr": "05:19", "sunrise": "06:38", "dhuhr": "12:53", "asr": "16:22", "maghrib": "19:01", "isha": "20:16"},
+    {"day": 16, "fajr": "05:20", "sunrise": "06:38", "dhuhr": "12:53", "asr": "16:22", "maghrib": "19:00", "isha": "20:15"},
+    {"day": 17, "fajr": "05:20", "sunrise": "06:39", "dhuhr": "12:52", "asr": "16:21", "maghrib": "18:59", "isha": "20:14"},
+    {"day": 18, "fajr": "05:20", "sunrise": "06:39", "dhuhr": "12:52", "asr": "16:20", "maghrib": "18:57", "isha": "20:12"},
+    {"day": 19, "fajr": "05:20", "sunrise": "06:39", "dhuhr": "12:52", "asr": "16:20", "maghrib": "18:56", "isha": "20:11"},
+    {"day": 20, "fajr": "05:21", "sunrise": "06:40", "dhuhr": "12:51", "asr": "16:20", "maghrib": "18:55", "isha": "20:10"},
+    {"day": 21, "fajr": "05:21", "sunrise": "06:40", "dhuhr": "12:51", "asr": "16:18", "maghrib": "18:53", "isha": "20:08"},
+    {"day": 22, "fajr": "05:21", "sunrise": "06:40", "dhuhr": "12:51", "asr": "16:18", "maghrib": "18:52", "isha": "20:06"},
+    {"day": 23, "fajr": "05:21", "sunrise": "06:41", "dhuhr": "12:51", "asr": "16:17", "maghrib": "18:51", "isha": "20:05"},
+    {"day": 24, "fajr": "05:21", "sunrise": "06:41", "dhuhr": "12:50", "asr": "16:16", "maghrib": "18:50", "isha": "20:04"},
+    {"day": 25, "fajr": "05:22", "sunrise": "06:42", "dhuhr": "12:50", "asr": "16:16", "maghrib": "18:49", "isha": "20:03"},
+    {"day": 26, "fajr": "05:22", "sunrise": "06:42", "dhuhr": "12:50", "asr": "16:16", "maghrib": "18:48", "isha": "20:02"},
+    {"day": 27, "fajr": "05:22", "sunrise": "06:43", "dhuhr": "12:50", "asr": "16:15", "maghrib": "18:47", "isha": "20:01"},
+    {"day": 28, "fajr": "05:23", "sunrise": "06:43", "dhuhr": "12:49", "asr": "16:14", "maghrib": "18:46", "isha": "20:00"},
+    {"day": 29, "fajr": "05:23", "sunrise": "06:43", "dhuhr": "12:49", "asr": "16:13", "maghrib": "18:45", "isha": "19:59"},
+    {"day": 30, "fajr": "05:23", "sunrise": "06:44", "dhuhr": "12:49", "asr": "16:12", "maghrib": "18:44", "isha": "19:58"},
   ];
 
   // خريطة لتخزين شهور السنة كاملة (يمكنك إضافة الشهور 1 إلى 12 تباعاً هنا)
@@ -358,12 +358,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   String _adjustTime(String prayerKey, String time24) {
-    // في التوقيت الصيفي: يتم تقديم جميع الصلوات ساعة واحدة (ما عدا صلاة الظهر مضبوطة كما هي)
-    if (_isSummerTime && prayerKey != 'dhuhr') {
+    // مواعيد الجدول الأساسية مخزنة بالتوقيت الصيفي المعتمد لمحافظة الأقصر
+    // عند إلغاء تفعيل التوقيت الصيفي (التحويل للتوقيت الشتوي): يتم تأخير الصلوات ساعة (ما عدا الظهر)
+    if (!_isSummerTime && prayerKey != 'dhuhr') {
       final parts = time24.split(':');
       int hour = int.parse(parts[0]);
       int minute = int.parse(parts[1]);
-      hour = (hour + 1) % 24;
+      hour = (hour - 1 + 24) % 24;
       return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
     }
     return time24;
@@ -955,8 +956,8 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             subtitle: Text(
               _isSummerTime
-                  ? 'مفعل (تقديم ساعة لجميع الصلوات ما عدا الظهر)'
-                  : 'غير مفعل (التوقيت الشتوي الأصلي)',
+                  ? 'مفعل (التوقيت الصيفي المعتمد بالجدول)'
+                  : 'غير مفعل (التوقيت الشتوي - تأخير ساعة)',
               style: GoogleFonts.cairo(fontSize: 11, color: Colors.white54),
             ),
             value: _isSummerTime,
