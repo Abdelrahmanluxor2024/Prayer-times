@@ -30,6 +30,9 @@ jobs:
           if [ ! -f "android/build.gradle" ]; then
             flutter create --org com.sheikhhussein .
           fi
+          # تعديل minSdkVersion ليتوافق مع مكتبات الإشعارات والأذان
+          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 21/g' android/app/build.gradle || true
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle || true
 
       - name: Install dependencies
         run: flutter pub get
