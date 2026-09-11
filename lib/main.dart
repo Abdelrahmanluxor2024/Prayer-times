@@ -299,6 +299,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  static const MethodChannel _audioChannel =
+      MethodChannel('com.sheikhhussein.prayertimes/audio');
+
   late Timer _timer;
   DateTime _now = DateTime.now();
   bool _isSummerTime = true;
@@ -306,8 +309,53 @@ class _HomeScreenState extends State<HomeScreen>
   bool _athanNotifications = true;
   final int _selectedMonth = 9;
 
+  bool _isPlayingAudio = false;
+  String _lastTriggeredAthanKey = '';
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
+
+  Future<void> _playAthanSound() async {
+    try {
+      await _audioChannel.invokeMethod('playAthan');
+      if (mounted) setState(() => _isPlayingAudio = true);
+    } catch (_) {}
+  }
+
+  Future<void> _stopAthanSound() async {
+    try {
+      await _audioChannel.invokeMethod('stopAthan');
+      if (mounted) setState(() => _isPlayingAudio = false);
+    } catch (_) {}
+  }
+
+  void _checkAndTriggerAthan(Map<String, dynamic> todayData) {
+    if (!_athanNotifications) return;
+
+    final currentHour = _now.hour;
+    final currentMinute = _now.minute;
+    final currentSecond = _now.second;
+
+    // افحص كل الصلوات الخمس ما عدا الشروق
+    for (var meta in PrayerData.prayerMeta) {
+      final key = meta['key']!;
+      if (key == 'sunrise') continue; // الشروق ليس له أذان
+
+      final adjusted = _adjustTime(key, todayData[key]!);
+      final parts = adjusted.split(':');
+      final pHour = int.parse(parts[0]);
+      final pMinute = int.parse(parts[1]);
+
+      // في أول 3 ثوانٍ من دخول وقت الصلاة
+      if (currentHour == pHour && currentMinute == pMinute && currentSecond <= 3) {
+        final triggerToken = '${_now.day}_$key';
+        if (_lastTriggeredAthanKey != triggerToken) {
+          _lastTriggeredAthanKey = triggerToken;
+          _playAthanSound();
+        }
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -328,6 +376,7 @@ class _HomeScreenState extends State<HomeScreen>
         setState(() {
           _now = DateTime.now();
         });
+        _checkAndTriggerAthan(_getTodayData());
       }
     });
   }
@@ -335,6 +384,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _timer.cancel();
+    _stopAthanSound();
     _pulseController.dispose();
     super.dispose();
   }
@@ -651,7 +701,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildLiveClockAndDate(String arabicDate) {
-    final liveTime = DateFormat('HH:mm:ss').format(_now);
+    int hour = _now.hour;
+    final period = hour >= 12 ? 'م' : 'ص';
+    hour = hour % 12;
+    if (hour == 0) hour = 12;
+    final minute = _now.minute.toString().padLeft(2, '0');
+    final second = _now.second.toString().padLeft(2, '0');
+    final liveTime = '$hour:$minute:$second';
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -671,20 +727,36 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            liveTime,
-            style: GoogleFonts.cairo(
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFFFFD700),
-              letterSpacing: 2,
-              shadows: [
-                Shadow(
-                  color: const Color(0xFFFFD700).withOpacity(0.6),
-                  blurRadius: 14,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                liveTime,
+                style: GoogleFonts.cairo(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFFFFD700),
+                  letterSpacing: 2,
+                  shadows: [
+                    Shadow(
+                      color: const Color(0xFFFFD700).withOpacity(0.6),
+                      blurRadius: 14,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                period,
+                style: GoogleFonts.cairo(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFFD700),
+                ),
+              ),
+            ],
           ),
           if (_now.month != 9)
             Padding(
@@ -993,7 +1065,7 @@ class _HomeScreenState extends State<HomeScreen>
               style: GoogleFonts.cairo(fontSize: 14, color: Colors.white),
             ),
             subtitle: Text(
-              'تنبيه المصلين عند دخول وقت الصلاة',
+              'تشغيل صوت الأذان بصوت المؤذن عند دخول وقت الصلاة',
               style: GoogleFonts.cairo(fontSize: 11, color: Colors.white54),
             ),
             value: _athanNotifications,
@@ -1001,6 +1073,52 @@ class _HomeScreenState extends State<HomeScreen>
               setState(() => _athanNotifications = val);
               _saveSetting('athanNotifications', val);
             },
+          ),
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () {
+              if (_isPlayingAudio) {
+                _stopAthanSound();
+              } else {
+                _playAthanSound();
+              }
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: _isPlayingAudio
+                    ? const Color(0xFFE53935).withOpacity(0.18)
+                    : const Color(0xFFFFD700).withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: _isPlayingAudio
+                      ? const Color(0xFFEF5350)
+                      : const Color(0xFFFFD700).withOpacity(0.35),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _isPlayingAudio ? Icons.stop_circle_outlined : Icons.volume_up_rounded,
+                    color: _isPlayingAudio ? const Color(0xFFEF5350) : const Color(0xFFFFD700),
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _isPlayingAudio
+                        ? 'إيقاف تشغيل صوت الأذان'
+                        : 'تجربة واستماع لصوت الأذان (المؤذن)',
+                    style: GoogleFonts.cairo(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: _isPlayingAudio ? const Color(0xFFEF5350) : const Color(0xFFFFD700),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -1171,13 +1289,20 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _tableTimeItem(String label, String time) {
+  Widget _tableTimeItem(String label, String time24) {
+    final parts = time24.split(':');
+    int hour = int.parse(parts[0]);
+    final minute = parts[1];
+    hour = hour % 12;
+    if (hour == 0) hour = 12;
+    final time12 = '$hour:$minute';
+
     return Column(
       children: [
         Text(label,
             style: GoogleFonts.cairo(fontSize: 11, color: Colors.white60)),
         Text(
-          time,
+          time12,
           style: GoogleFonts.cairo(
             fontSize: 12,
             fontWeight: FontWeight.bold,
