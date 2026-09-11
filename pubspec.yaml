@@ -15,8 +15,6 @@ dependencies:
   url_launcher: ^6.2.1
   intl: any
   google_fonts: ^6.1.0
-  flutter_local_notifications: ^17.0.0
-  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
