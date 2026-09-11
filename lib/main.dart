@@ -1213,14 +1213,16 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            displayPhone,
+          Directionality(
             textDirection: TextDirection.ltr,
-            style: GoogleFonts.cairo(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFFFE082),
-              letterSpacing: 1.2,
+            child: Text(
+              displayPhone,
+              style: GoogleFonts.cairo(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFFFE082),
+                letterSpacing: 1.2,
+              ),
             ),
           ),
           const SizedBox(height: 12),
