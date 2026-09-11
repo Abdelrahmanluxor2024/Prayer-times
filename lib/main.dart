@@ -357,13 +357,16 @@ class _HomeScreenState extends State<HomeScreen>
     } catch (_) {}
   }
 
-  String _adjustTime(String time24) {
-    if (_isSummerTime) return time24;
-    final parts = time24.split(':');
-    int hour = int.parse(parts[0]);
-    int minute = int.parse(parts[1]);
-    hour = (hour - 1 + 24) % 24;
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  String _adjustTime(String prayerKey, String time24) {
+    // في التوقيت الصيفي: يتم تقديم جميع الصلوات ساعة واحدة (ما عدا صلاة الظهر مضبوطة كما هي)
+    if (_isSummerTime && prayerKey != 'dhuhr') {
+      final parts = time24.split(':');
+      int hour = int.parse(parts[0]);
+      int minute = int.parse(parts[1]);
+      hour = (hour + 1) % 24;
+      return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+    }
+    return time24;
   }
 
   String _format12Hour(String time24) {
@@ -402,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen>
       (element) => element['day'] == tomorrowDay,
       orElse: () => monthList.first,
     );
-    return _adjustTime(tomorrowData['fajr']);
+    return _adjustTime('fajr', tomorrowData['fajr']);
   }
 
   Map<String, dynamic> _getNextPrayerInfo() {
@@ -411,7 +414,8 @@ class _HomeScreenState extends State<HomeScreen>
     final nowSeconds = _now.second;
 
     for (var meta in PrayerData.prayerMeta) {
-      final adjusted = _adjustTime(todayData[meta['key']]!);
+      final key = meta['key']!;
+      final adjusted = _adjustTime(key, todayData[key]!);
       final parts = adjusted.split(':');
       final pMinutes = int.parse(parts[0]) * 60 + int.parse(parts[1]);
 
@@ -771,7 +775,7 @@ class _HomeScreenState extends State<HomeScreen>
         final name = meta['name']!;
         final icon = meta['icon']!;
         final rawTime = todayData[key]!;
-        final adjusted = _adjustTime(rawTime);
+        final adjusted = _adjustTime(key, rawTime);
         final formatted12 = _format12Hour(adjusted);
         final isNext = (nextPrayerKey == key);
         final iqama = PrayerData.iqamaMinutes[key] ?? 0;
@@ -951,8 +955,8 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             subtitle: Text(
               _isSummerTime
-                  ? 'مفعل (التوقيت الحالي للجدول)'
-                  : 'غير مفعل (طرح ساعة)',
+                  ? 'مفعل (تقديم ساعة لجميع الصلوات ما عدا الظهر)'
+                  : 'غير مفعل (التوقيت الشتوي الأصلي)',
               style: GoogleFonts.cairo(fontSize: 11, color: Colors.white54),
             ),
             value: _isSummerTime,
@@ -1142,14 +1146,14 @@ class _HomeScreenState extends State<HomeScreen>
                               mainAxisAlignment:
                                   MainAxisAlignment.spaceAround,
                               children: [
-                                _tableTimeItem('فجر', _adjustTime(item['fajr'])),
+                                _tableTimeItem('فجر', _adjustTime('fajr', item['fajr'])),
                                 _tableTimeItem(
-                                    'شروق', _adjustTime(item['sunrise'])),
-                                _tableTimeItem('ظهر', _adjustTime(item['dhuhr'])),
-                                _tableTimeItem('عصر', _adjustTime(item['asr'])),
+                                    'شروق', _adjustTime('sunrise', item['sunrise'])),
+                                _tableTimeItem('ظهر', _adjustTime('dhuhr', item['dhuhr'])),
+                                _tableTimeItem('عصر', _adjustTime('asr', item['asr'])),
                                 _tableTimeItem(
-                                    'مغرب', _adjustTime(item['maghrib'])),
-                                _tableTimeItem('عشاء', _adjustTime(item['isha'])),
+                                    'مغرب', _adjustTime('maghrib', item['maghrib'])),
+                                _tableTimeItem('عشاء', _adjustTime('isha', item['isha'])),
                               ],
                             ),
                           ],

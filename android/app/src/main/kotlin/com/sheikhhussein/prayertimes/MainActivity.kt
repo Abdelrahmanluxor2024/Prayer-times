@@ -1,6 +1,5 @@
-﻿package com.sheikhhussein.prayertimes
+package com.sheikhhussein.prayertimes
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity() {
-}
+class MainActivity: FlutterActivity()
