@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,6 +231,282 @@ class _SplashScreenState extends State<SplashScreen>
 // قاعدة بيانات المواقيت (قابلة لإضافة جميع شهور السنة)
 // -------------------------------------------------------------
 class PrayerData {
+  // شهر january
+  static const List<Map<String, dynamic>> januaryTimes = [
+    {"day": 1, "fajr": "06:13", "sunrise": "07:41", "dhuhr": "13:09", "asr": "15:57", "maghrib": "18:15", "isha": "19:34"},
+    {"day": 2, "fajr": "06:13", "sunrise": "07:41", "dhuhr": "13:10", "asr": "15:58", "maghrib": "18:16", "isha": "19:35"},
+    {"day": 3, "fajr": "06:14", "sunrise": "07:42", "dhuhr": "13:10", "asr": "15:59", "maghrib": "18:17", "isha": "19:36"},
+    {"day": 4, "fajr": "06:14", "sunrise": "07:42", "dhuhr": "13:10", "asr": "15:59", "maghrib": "18:18", "isha": "19:37"},
+    {"day": 5, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:10", "asr": "16:00", "maghrib": "18:19", "isha": "19:38"},
+    {"day": 6, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:10", "asr": "16:00", "maghrib": "18:19", "isha": "19:38"},
+    {"day": 7, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:11", "asr": "16:01", "maghrib": "18:20", "isha": "19:39"},
+    {"day": 8, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:11", "asr": "16:01", "maghrib": "18:20", "isha": "19:39"},
+    {"day": 9, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:02", "maghrib": "18:21", "isha": "19:40"},
+    {"day": 10, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:03", "maghrib": "18:22", "isha": "19:41"},
+    {"day": 11, "fajr": "06:15", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:03", "maghrib": "18:23", "isha": "19:41"},
+    {"day": 12, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:04", "maghrib": "18:24", "isha": "19:42"},
+    {"day": 13, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:06", "maghrib": "18:24", "isha": "19:43"},
+    {"day": 14, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:12", "asr": "16:06", "maghrib": "18:24", "isha": "19:43"},
+    {"day": 15, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:13", "asr": "16:07", "maghrib": "18:25", "isha": "19:44"},
+    {"day": 16, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:13", "asr": "16:08", "maghrib": "18:26", "isha": "19:45"},
+    {"day": 17, "fajr": "06:16", "sunrise": "07:43", "dhuhr": "13:14", "asr": "16:09", "maghrib": "18:27", "isha": "19:46"},
+    {"day": 18, "fajr": "06:16", "sunrise": "07:42", "dhuhr": "13:15", "asr": "16:10", "maghrib": "18:28", "isha": "19:47"},
+    {"day": 19, "fajr": "06:17", "sunrise": "07:42", "dhuhr": "13:15", "asr": "16:10", "maghrib": "18:29", "isha": "19:47"},
+    {"day": 20, "fajr": "06:17", "sunrise": "07:42", "dhuhr": "13:16", "asr": "16:11", "maghrib": "18:30", "isha": "19:48"},
+    {"day": 21, "fajr": "06:17", "sunrise": "07:42", "dhuhr": "13:16", "asr": "16:12", "maghrib": "18:31", "isha": "19:48"},
+    {"day": 22, "fajr": "06:17", "sunrise": "07:42", "dhuhr": "13:16", "asr": "16:13", "maghrib": "18:32", "isha": "19:48"},
+    {"day": 23, "fajr": "06:17", "sunrise": "07:42", "dhuhr": "13:16", "asr": "16:13", "maghrib": "18:32", "isha": "19:49"},
+    {"day": 24, "fajr": "06:17", "sunrise": "07:41", "dhuhr": "13:16", "asr": "16:14", "maghrib": "18:33", "isha": "19:50"},
+    {"day": 25, "fajr": "06:17", "sunrise": "07:41", "dhuhr": "13:16", "asr": "16:15", "maghrib": "18:34", "isha": "19:51"},
+    {"day": 26, "fajr": "06:17", "sunrise": "07:41", "dhuhr": "13:16", "asr": "16:15", "maghrib": "18:35", "isha": "19:52"},
+    {"day": 27, "fajr": "06:16", "sunrise": "07:41", "dhuhr": "13:16", "asr": "16:15", "maghrib": "18:35", "isha": "19:53"},
+    {"day": 28, "fajr": "06:16", "sunrise": "07:40", "dhuhr": "13:16", "asr": "16:16", "maghrib": "18:36", "isha": "19:53"},
+    {"day": 29, "fajr": "06:16", "sunrise": "07:40", "dhuhr": "13:16", "asr": "16:17", "maghrib": "18:37", "isha": "19:54"},
+    {"day": 30, "fajr": "06:16", "sunrise": "07:39", "dhuhr": "13:16", "asr": "16:17", "maghrib": "18:37", "isha": "19:54"},
+    {"day": 31, "fajr": "06:15", "sunrise": "07:39", "dhuhr": "13:15", "asr": "16:18", "maghrib": "18:38", "isha": "19:55"},
+  ];
+
+  // شهر february
+  static const List<Map<String, dynamic>> februaryTimes = [
+    {"day": 1, "fajr": "06:14", "sunrise": "07:38", "dhuhr": "13:15", "asr": "16:18", "maghrib": "18:38", "isha": "19:55"},
+    {"day": 2, "fajr": "06:14", "sunrise": "07:38", "dhuhr": "13:15", "asr": "16:18", "maghrib": "18:39", "isha": "19:56"},
+    {"day": 3, "fajr": "06:14", "sunrise": "07:38", "dhuhr": "13:15", "asr": "16:19", "maghrib": "18:40", "isha": "19:57"},
+    {"day": 4, "fajr": "06:13", "sunrise": "07:37", "dhuhr": "13:15", "asr": "16:19", "maghrib": "18:40", "isha": "19:57"},
+    {"day": 5, "fajr": "06:13", "sunrise": "07:37", "dhuhr": "13:15", "asr": "16:20", "maghrib": "18:41", "isha": "19:58"},
+    {"day": 6, "fajr": "06:12", "sunrise": "07:36", "dhuhr": "13:15", "asr": "16:21", "maghrib": "18:42", "isha": "19:59"},
+    {"day": 7, "fajr": "06:12", "sunrise": "07:36", "dhuhr": "13:15", "asr": "16:21", "maghrib": "18:43", "isha": "20:00"},
+    {"day": 8, "fajr": "06:11", "sunrise": "07:35", "dhuhr": "13:15", "asr": "16:21", "maghrib": "18:43", "isha": "20:00"},
+    {"day": 9, "fajr": "06:10", "sunrise": "07:35", "dhuhr": "13:15", "asr": "16:22", "maghrib": "18:44", "isha": "20:00"},
+    {"day": 10, "fajr": "06:09", "sunrise": "07:34", "dhuhr": "13:15", "asr": "16:22", "maghrib": "18:44", "isha": "20:00"},
+    {"day": 11, "fajr": "06:08", "sunrise": "07:33", "dhuhr": "13:15", "asr": "16:22", "maghrib": "18:45", "isha": "20:01"},
+    {"day": 12, "fajr": "06:08", "sunrise": "07:32", "dhuhr": "13:14", "asr": "16:23", "maghrib": "18:46", "isha": "20:02"},
+    {"day": 13, "fajr": "06:08", "sunrise": "07:32", "dhuhr": "13:14", "asr": "16:24", "maghrib": "18:47", "isha": "20:03"},
+    {"day": 14, "fajr": "06:08", "sunrise": "07:31", "dhuhr": "13:14", "asr": "16:24", "maghrib": "18:48", "isha": "20:04"},
+    {"day": 15, "fajr": "06:06", "sunrise": "07:30", "dhuhr": "13:14", "asr": "16:25", "maghrib": "18:48", "isha": "20:05"},
+    {"day": 16, "fajr": "06:06", "sunrise": "07:29", "dhuhr": "13:14", "asr": "16:25", "maghrib": "18:49", "isha": "20:05"},
+    {"day": 17, "fajr": "06:05", "sunrise": "07:29", "dhuhr": "13:13", "asr": "16:25", "maghrib": "18:49", "isha": "20:05"},
+    {"day": 18, "fajr": "06:05", "sunrise": "07:28", "dhuhr": "13:13", "asr": "16:25", "maghrib": "18:50", "isha": "20:06"},
+    {"day": 19, "fajr": "06:03", "sunrise": "07:28", "dhuhr": "13:13", "asr": "16:26", "maghrib": "18:50", "isha": "20:06"},
+    {"day": 20, "fajr": "06:02", "sunrise": "07:27", "dhuhr": "13:13", "asr": "16:27", "maghrib": "18:50", "isha": "20:06"},
+    {"day": 21, "fajr": "06:02", "sunrise": "07:26", "dhuhr": "13:13", "asr": "16:27", "maghrib": "18:51", "isha": "20:07"},
+    {"day": 22, "fajr": "06:01", "sunrise": "07:25", "dhuhr": "13:13", "asr": "16:27", "maghrib": "18:52", "isha": "20:08"},
+    {"day": 23, "fajr": "06:00", "sunrise": "07:24", "dhuhr": "13:13", "asr": "16:28", "maghrib": "18:52", "isha": "20:08"},
+    {"day": 24, "fajr": "06:00", "sunrise": "07:23", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:53", "isha": "20:09"},
+    {"day": 25, "fajr": "05:58", "sunrise": "07:22", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:53", "isha": "20:09"},
+    {"day": 26, "fajr": "05:58", "sunrise": "07:21", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:54", "isha": "20:10"},
+    {"day": 27, "fajr": "05:56", "sunrise": "07:19", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:55", "isha": "20:10"},
+    {"day": 28, "fajr": "05:56", "sunrise": "07:18", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:55", "isha": "20:10"},
+    {"day": 29, "fajr": "05:55", "sunrise": "07:18", "dhuhr": "13:12", "asr": "16:28", "maghrib": "18:55", "isha": "20:10"},
+  ];
+
+  // شهر march
+  static const List<Map<String, dynamic>> marchTimes = [
+    {"day": 1, "fajr": "05:55", "sunrise": "07:18", "dhuhr": "13:12", "asr": "16:29", "maghrib": "18:56", "isha": "20:11"},
+    {"day": 2, "fajr": "05:54", "sunrise": "07:16", "dhuhr": "13:11", "asr": "16:29", "maghrib": "18:56", "isha": "20:11"},
+    {"day": 3, "fajr": "05:53", "sunrise": "07:16", "dhuhr": "13:11", "asr": "16:29", "maghrib": "18:57", "isha": "20:12"},
+    {"day": 4, "fajr": "05:52", "sunrise": "07:14", "dhuhr": "13:11", "asr": "16:29", "maghrib": "18:57", "isha": "20:12"},
+    {"day": 5, "fajr": "05:51", "sunrise": "07:13", "dhuhr": "13:11", "asr": "16:30", "maghrib": "18:58", "isha": "20:13"},
+    {"day": 6, "fajr": "05:50", "sunrise": "07:12", "dhuhr": "13:10", "asr": "16:30", "maghrib": "18:58", "isha": "20:13"},
+    {"day": 7, "fajr": "05:49", "sunrise": "07:11", "dhuhr": "13:10", "asr": "16:30", "maghrib": "18:59", "isha": "20:14"},
+    {"day": 8, "fajr": "05:49", "sunrise": "07:11", "dhuhr": "13:10", "asr": "16:31", "maghrib": "19:00", "isha": "20:15"},
+    {"day": 9, "fajr": "05:47", "sunrise": "07:10", "dhuhr": "13:09", "asr": "16:31", "maghrib": "19:00", "isha": "20:15"},
+    {"day": 10, "fajr": "05:46", "sunrise": "07:09", "dhuhr": "13:08", "asr": "16:31", "maghrib": "19:01", "isha": "20:15"},
+    {"day": 11, "fajr": "05:45", "sunrise": "07:07", "dhuhr": "13:08", "asr": "16:31", "maghrib": "19:01", "isha": "20:15"},
+    {"day": 12, "fajr": "05:44", "sunrise": "07:06", "dhuhr": "13:08", "asr": "16:31", "maghrib": "19:01", "isha": "20:15"},
+    {"day": 13, "fajr": "05:42", "sunrise": "07:05", "dhuhr": "13:08", "asr": "16:31", "maghrib": "19:01", "isha": "20:15"},
+    {"day": 14, "fajr": "05:41", "sunrise": "07:04", "dhuhr": "13:07", "asr": "16:31", "maghrib": "19:02", "isha": "20:16"},
+    {"day": 15, "fajr": "05:40", "sunrise": "07:03", "dhuhr": "13:07", "asr": "16:31", "maghrib": "19:03", "isha": "20:17"},
+    {"day": 16, "fajr": "05:39", "sunrise": "07:02", "dhuhr": "13:07", "asr": "16:31", "maghrib": "19:03", "isha": "20:17"},
+    {"day": 17, "fajr": "05:37", "sunrise": "07:01", "dhuhr": "13:06", "asr": "16:31", "maghrib": "19:03", "isha": "20:17"},
+    {"day": 18, "fajr": "05:37", "sunrise": "07:00", "dhuhr": "13:06", "asr": "16:32", "maghrib": "19:04", "isha": "20:18"},
+    {"day": 19, "fajr": "05:35", "sunrise": "06:59", "dhuhr": "13:05", "asr": "16:32", "maghrib": "19:04", "isha": "20:18"},
+    {"day": 20, "fajr": "05:34", "sunrise": "06:58", "dhuhr": "13:05", "asr": "16:32", "maghrib": "19:05", "isha": "20:19"},
+    {"day": 21, "fajr": "05:32", "sunrise": "06:56", "dhuhr": "13:04", "asr": "16:32", "maghrib": "19:05", "isha": "20:19"},
+    {"day": 22, "fajr": "05:32", "sunrise": "06:55", "dhuhr": "13:04", "asr": "16:32", "maghrib": "19:06", "isha": "20:20"},
+    {"day": 23, "fajr": "05:30", "sunrise": "06:54", "dhuhr": "13:04", "asr": "16:32", "maghrib": "19:06", "isha": "20:20"},
+    {"day": 24, "fajr": "05:29", "sunrise": "06:53", "dhuhr": "13:03", "asr": "16:32", "maghrib": "19:07", "isha": "20:21"},
+    {"day": 25, "fajr": "05:29", "sunrise": "06:52", "dhuhr": "13:03", "asr": "16:32", "maghrib": "19:08", "isha": "20:22"},
+    {"day": 26, "fajr": "05:27", "sunrise": "06:50", "dhuhr": "13:03", "asr": "16:32", "maghrib": "19:08", "isha": "20:22"},
+    {"day": 27, "fajr": "05:27", "sunrise": "06:49", "dhuhr": "13:03", "asr": "16:32", "maghrib": "19:09", "isha": "20:23"},
+    {"day": 28, "fajr": "05:26", "sunrise": "06:48", "dhuhr": "13:02", "asr": "16:32", "maghrib": "19:10", "isha": "20:24"},
+    {"day": 29, "fajr": "05:24", "sunrise": "06:46", "dhuhr": "13:02", "asr": "16:32", "maghrib": "19:10", "isha": "20:24"},
+    {"day": 30, "fajr": "05:23", "sunrise": "06:45", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:10", "isha": "20:24"},
+    {"day": 31, "fajr": "05:21", "sunrise": "06:44", "dhuhr": "13:00", "asr": "16:31", "maghrib": "19:10", "isha": "20:24"},
+  ];
+
+  // شهر april
+  static const List<Map<String, dynamic>> aprilTimes = [
+    {"day": 1, "fajr": "05:20", "sunrise": "06:44", "dhuhr": "13:00", "asr": "16:31", "maghrib": "19:11", "isha": "20:25"},
+    {"day": 2, "fajr": "05:19", "sunrise": "06:43", "dhuhr": "13:00", "asr": "16:31", "maghrib": "19:11", "isha": "20:25"},
+    {"day": 3, "fajr": "05:17", "sunrise": "06:41", "dhuhr": "12:59", "asr": "16:31", "maghrib": "19:11", "isha": "20:25"},
+    {"day": 4, "fajr": "05:16", "sunrise": "06:41", "dhuhr": "12:59", "asr": "16:31", "maghrib": "19:12", "isha": "20:26"},
+    {"day": 5, "fajr": "05:14", "sunrise": "06:40", "dhuhr": "12:59", "asr": "16:31", "maghrib": "19:12", "isha": "20:26"},
+    {"day": 6, "fajr": "05:13", "sunrise": "06:38", "dhuhr": "12:58", "asr": "16:30", "maghrib": "19:12", "isha": "20:26"},
+    {"day": 7, "fajr": "05:12", "sunrise": "06:37", "dhuhr": "12:58", "asr": "16:30", "maghrib": "19:13", "isha": "20:28"},
+    {"day": 8, "fajr": "05:10", "sunrise": "06:36", "dhuhr": "12:58", "asr": "16:30", "maghrib": "19:13", "isha": "20:28"},
+    {"day": 9, "fajr": "05:10", "sunrise": "06:36", "dhuhr": "12:58", "asr": "16:30", "maghrib": "19:14", "isha": "20:29"},
+    {"day": 10, "fajr": "05:08", "sunrise": "06:34", "dhuhr": "12:57", "asr": "16:30", "maghrib": "19:14", "isha": "20:29"},
+    {"day": 11, "fajr": "05:07", "sunrise": "06:33", "dhuhr": "12:57", "asr": "16:30", "maghrib": "19:15", "isha": "20:30"},
+    {"day": 12, "fajr": "05:06", "sunrise": "06:32", "dhuhr": "12:56", "asr": "16:30", "maghrib": "19:15", "isha": "20:30"},
+    {"day": 13, "fajr": "05:04", "sunrise": "06:31", "dhuhr": "12:56", "asr": "16:30", "maghrib": "19:15", "isha": "20:30"},
+    {"day": 14, "fajr": "05:03", "sunrise": "06:30", "dhuhr": "12:55", "asr": "16:30", "maghrib": "19:16", "isha": "20:31"},
+    {"day": 15, "fajr": "05:01", "sunrise": "06:29", "dhuhr": "12:55", "asr": "16:30", "maghrib": "19:16", "isha": "20:31"},
+    {"day": 16, "fajr": "05:01", "sunrise": "06:28", "dhuhr": "12:55", "asr": "16:30", "maghrib": "19:17", "isha": "20:32"},
+    {"day": 17, "fajr": "05:00", "sunrise": "06:28", "dhuhr": "12:55", "asr": "16:30", "maghrib": "19:18", "isha": "20:34"},
+    {"day": 18, "fajr": "04:59", "sunrise": "06:26", "dhuhr": "12:54", "asr": "16:30", "maghrib": "19:18", "isha": "20:34"},
+    {"day": 19, "fajr": "04:58", "sunrise": "06:25", "dhuhr": "12:54", "asr": "16:30", "maghrib": "19:19", "isha": "20:35"},
+    {"day": 20, "fajr": "04:57", "sunrise": "06:25", "dhuhr": "12:54", "asr": "16:30", "maghrib": "19:20", "isha": "20:36"},
+    {"day": 21, "fajr": "04:55", "sunrise": "06:23", "dhuhr": "12:54", "asr": "16:30", "maghrib": "19:20", "isha": "20:36"},
+    {"day": 22, "fajr": "04:55", "sunrise": "06:22", "dhuhr": "12:54", "asr": "16:30", "maghrib": "19:21", "isha": "20:38"},
+    {"day": 23, "fajr": "04:53", "sunrise": "06:22", "dhuhr": "12:53", "asr": "16:29", "maghrib": "19:21", "isha": "20:38"},
+    {"day": 24, "fajr": "04:51", "sunrise": "06:20", "dhuhr": "12:52", "asr": "16:29", "maghrib": "19:21", "isha": "20:38"},
+    {"day": 25, "fajr": "04:50", "sunrise": "06:20", "dhuhr": "12:52", "asr": "16:28", "maghrib": "19:22", "isha": "20:39"},
+    {"day": 26, "fajr": "04:49", "sunrise": "06:19", "dhuhr": "12:52", "asr": "16:28", "maghrib": "19:22", "isha": "20:39"},
+    {"day": 27, "fajr": "04:48", "sunrise": "06:18", "dhuhr": "12:52", "asr": "16:28", "maghrib": "19:23", "isha": "20:39"},
+    {"day": 28, "fajr": "04:46", "sunrise": "06:17", "dhuhr": "12:52", "asr": "16:28", "maghrib": "19:23", "isha": "20:41"},
+    {"day": 29, "fajr": "04:45", "sunrise": "06:16", "dhuhr": "12:52", "asr": "16:28", "maghrib": "19:24", "isha": "20:42"},
+    {"day": 30, "fajr": "04:44", "sunrise": "06:15", "dhuhr": "12:52", "asr": "16:27", "maghrib": "19:24", "isha": "20:42"},
+  ];
+
+  // شهر may
+  static const List<Map<String, dynamic>> mayTimes = [
+    {"day": 1, "fajr": "04:43", "sunrise": "06:15", "dhuhr": "12:52", "asr": "16:27", "maghrib": "19:25", "isha": "20:43"},
+    {"day": 2, "fajr": "04:42", "sunrise": "06:14", "dhuhr": "12:52", "asr": "16:27", "maghrib": "19:25", "isha": "20:43"},
+    {"day": 3, "fajr": "04:41", "sunrise": "06:13", "dhuhr": "12:52", "asr": "16:27", "maghrib": "19:26", "isha": "20:45"},
+    {"day": 4, "fajr": "04:40", "sunrise": "06:13", "dhuhr": "12:52", "asr": "16:26", "maghrib": "19:26", "isha": "20:45"},
+    {"day": 5, "fajr": "04:38", "sunrise": "06:11", "dhuhr": "12:52", "asr": "16:25", "maghrib": "19:27", "isha": "20:46"},
+    {"day": 6, "fajr": "04:38", "sunrise": "06:11", "dhuhr": "12:52", "asr": "16:25", "maghrib": "19:27", "isha": "20:46"},
+    {"day": 7, "fajr": "04:37", "sunrise": "06:10", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:27", "isha": "20:46"},
+    {"day": 8, "fajr": "04:36", "sunrise": "06:10", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:28", "isha": "20:48"},
+    {"day": 9, "fajr": "04:35", "sunrise": "06:08", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:29", "isha": "20:50"},
+    {"day": 10, "fajr": "04:34", "sunrise": "06:08", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:30", "isha": "20:51"},
+    {"day": 11, "fajr": "04:34", "sunrise": "06:08", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:30", "isha": "20:52"},
+    {"day": 12, "fajr": "04:33", "sunrise": "06:07", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:30", "isha": "20:52"},
+    {"day": 13, "fajr": "04:32", "sunrise": "06:07", "dhuhr": "12:50", "asr": "16:25", "maghrib": "19:31", "isha": "20:52"},
+    {"day": 14, "fajr": "04:31", "sunrise": "06:06", "dhuhr": "12:51", "asr": "16:25", "maghrib": "19:31", "isha": "20:54"},
+    {"day": 15, "fajr": "04:29", "sunrise": "06:05", "dhuhr": "12:51", "asr": "16:24", "maghrib": "19:31", "isha": "20:54"},
+    {"day": 16, "fajr": "04:29", "sunrise": "06:05", "dhuhr": "12:51", "asr": "16:24", "maghrib": "19:32", "isha": "20:55"},
+    {"day": 17, "fajr": "04:28", "sunrise": "06:04", "dhuhr": "12:51", "asr": "16:24", "maghrib": "19:32", "isha": "20:55"},
+    {"day": 18, "fajr": "04:27", "sunrise": "06:04", "dhuhr": "12:51", "asr": "16:23", "maghrib": "19:32", "isha": "20:56"},
+    {"day": 19, "fajr": "04:27", "sunrise": "06:03", "dhuhr": "12:51", "asr": "16:23", "maghrib": "19:33", "isha": "20:57"},
+    {"day": 20, "fajr": "04:26", "sunrise": "06:03", "dhuhr": "12:51", "asr": "16:22", "maghrib": "19:33", "isha": "20:57"},
+    {"day": 21, "fajr": "04:25", "sunrise": "06:02", "dhuhr": "12:51", "asr": "16:22", "maghrib": "19:33", "isha": "20:57"},
+    {"day": 22, "fajr": "04:25", "sunrise": "06:02", "dhuhr": "12:51", "asr": "16:22", "maghrib": "19:34", "isha": "20:58"},
+    {"day": 23, "fajr": "04:24", "sunrise": "06:02", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:34", "isha": "20:59"},
+    {"day": 24, "fajr": "04:23", "sunrise": "06:01", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:34", "isha": "20:59"},
+    {"day": 25, "fajr": "04:22", "sunrise": "06:01", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:35", "isha": "21:00"},
+    {"day": 26, "fajr": "04:21", "sunrise": "06:01", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:35", "isha": "21:00"},
+    {"day": 27, "fajr": "04:21", "sunrise": "06:01", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:36", "isha": "21:01"},
+    {"day": 28, "fajr": "04:20", "sunrise": "06:00", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:36", "isha": "21:01"},
+    {"day": 29, "fajr": "04:20", "sunrise": "06:00", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:37", "isha": "21:02"},
+    {"day": 30, "fajr": "04:20", "sunrise": "06:00", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:38", "isha": "21:03"},
+    {"day": 31, "fajr": "04:19", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:38", "isha": "21:04"},
+  ];
+
+  // شهر june
+  static const List<Map<String, dynamic>> juneTimes = [
+    {"day": 1, "fajr": "04:19", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:38", "isha": "21:05"},
+    {"day": 2, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:21", "maghrib": "19:39", "isha": "21:05"},
+    {"day": 3, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:22", "maghrib": "19:39", "isha": "21:05"},
+    {"day": 4, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:22", "maghrib": "19:40", "isha": "21:05"},
+    {"day": 5, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:22", "maghrib": "19:40", "isha": "21:06"},
+    {"day": 6, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:52", "asr": "16:22", "maghrib": "19:40", "isha": "21:07"},
+    {"day": 7, "fajr": "04:18", "sunrise": "05:59", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:41", "isha": "21:08"},
+    {"day": 8, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:41", "isha": "21:08"},
+    {"day": 9, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:42", "isha": "21:09"},
+    {"day": 10, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:42", "isha": "21:09"},
+    {"day": 11, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:53", "asr": "16:23", "maghrib": "19:42", "isha": "21:09"},
+    {"day": 12, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:54", "asr": "16:23", "maghrib": "19:43", "isha": "21:10"},
+    {"day": 13, "fajr": "04:18", "sunrise": "05:58", "dhuhr": "12:54", "asr": "16:23", "maghrib": "19:43", "isha": "21:10"},
+    {"day": 14, "fajr": "04:19", "sunrise": "05:58", "dhuhr": "12:54", "asr": "16:24", "maghrib": "19:44", "isha": "21:11"},
+    {"day": 15, "fajr": "04:19", "sunrise": "05:58", "dhuhr": "12:54", "asr": "16:24", "maghrib": "19:44", "isha": "21:11"},
+    {"day": 16, "fajr": "04:19", "sunrise": "05:58", "dhuhr": "12:54", "asr": "16:24", "maghrib": "19:44", "isha": "21:12"},
+    {"day": 17, "fajr": "04:20", "sunrise": "05:59", "dhuhr": "12:55", "asr": "16:24", "maghrib": "19:45", "isha": "21:13"},
+    {"day": 18, "fajr": "04:20", "sunrise": "05:59", "dhuhr": "12:55", "asr": "16:24", "maghrib": "19:45", "isha": "21:13"},
+    {"day": 19, "fajr": "04:20", "sunrise": "05:59", "dhuhr": "12:55", "asr": "16:24", "maghrib": "19:45", "isha": "21:13"},
+    {"day": 20, "fajr": "04:20", "sunrise": "05:59", "dhuhr": "12:55", "asr": "16:24", "maghrib": "19:45", "isha": "21:13"},
+    {"day": 21, "fajr": "04:20", "sunrise": "05:59", "dhuhr": "12:55", "asr": "16:24", "maghrib": "19:45", "isha": "21:13"},
+    {"day": 22, "fajr": "04:21", "sunrise": "06:00", "dhuhr": "12:56", "asr": "16:25", "maghrib": "19:46", "isha": "21:14"},
+    {"day": 23, "fajr": "04:21", "sunrise": "06:00", "dhuhr": "12:56", "asr": "16:25", "maghrib": "19:46", "isha": "21:14"},
+    {"day": 24, "fajr": "04:21", "sunrise": "06:00", "dhuhr": "12:56", "asr": "16:25", "maghrib": "19:46", "isha": "21:14"},
+    {"day": 25, "fajr": "04:21", "sunrise": "06:00", "dhuhr": "12:56", "asr": "16:25", "maghrib": "19:46", "isha": "21:14"},
+    {"day": 26, "fajr": "04:21", "sunrise": "06:00", "dhuhr": "12:56", "asr": "16:26", "maghrib": "19:46", "isha": "21:15"},
+    {"day": 27, "fajr": "04:23", "sunrise": "06:01", "dhuhr": "12:57", "asr": "16:27", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 28, "fajr": "04:23", "sunrise": "06:01", "dhuhr": "12:57", "asr": "16:27", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 29, "fajr": "04:23", "sunrise": "06:01", "dhuhr": "12:57", "asr": "16:27", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 30, "fajr": "04:23", "sunrise": "06:02", "dhuhr": "12:57", "asr": "16:27", "maghrib": "19:47", "isha": "21:15"},
+  ];
+
+  // شهر july
+  static const List<Map<String, dynamic>> julyTimes = [
+    {"day": 1, "fajr": "04:23", "sunrise": "06:02", "dhuhr": "12:58", "asr": "16:27", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 2, "fajr": "04:24", "sunrise": "06:03", "dhuhr": "12:58", "asr": "16:28", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 3, "fajr": "04:25", "sunrise": "06:03", "dhuhr": "12:58", "asr": "16:28", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 4, "fajr": "04:26", "sunrise": "06:04", "dhuhr": "12:58", "asr": "16:28", "maghrib": "19:47", "isha": "21:15"},
+    {"day": 5, "fajr": "04:26", "sunrise": "06:04", "dhuhr": "12:58", "asr": "16:28", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 6, "fajr": "04:26", "sunrise": "06:04", "dhuhr": "12:58", "asr": "16:29", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 7, "fajr": "04:27", "sunrise": "06:04", "dhuhr": "12:59", "asr": "16:29", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 8, "fajr": "04:28", "sunrise": "06:04", "dhuhr": "13:00", "asr": "16:29", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 9, "fajr": "04:29", "sunrise": "06:05", "dhuhr": "13:00", "asr": "16:29", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 10, "fajr": "04:30", "sunrise": "06:05", "dhuhr": "13:00", "asr": "16:29", "maghrib": "19:47", "isha": "21:14"},
+    {"day": 11, "fajr": "04:30", "sunrise": "06:05", "dhuhr": "13:00", "asr": "16:29", "maghrib": "19:46", "isha": "21:14"},
+    {"day": 12, "fajr": "04:30", "sunrise": "06:06", "dhuhr": "13:00", "asr": "16:29", "maghrib": "19:46", "isha": "21:13"},
+    {"day": 13, "fajr": "04:30", "sunrise": "06:06", "dhuhr": "13:00", "asr": "16:30", "maghrib": "19:46", "isha": "21:13"},
+    {"day": 14, "fajr": "04:31", "sunrise": "06:07", "dhuhr": "13:01", "asr": "16:30", "maghrib": "19:46", "isha": "21:13"},
+    {"day": 15, "fajr": "04:32", "sunrise": "06:08", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:46", "isha": "21:13"},
+    {"day": 16, "fajr": "04:33", "sunrise": "06:08", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:46", "isha": "21:12"},
+    {"day": 17, "fajr": "04:34", "sunrise": "06:09", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:46", "isha": "21:12"},
+    {"day": 18, "fajr": "04:34", "sunrise": "06:09", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:45", "isha": "21:11"},
+    {"day": 19, "fajr": "04:35", "sunrise": "06:10", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:45", "isha": "21:11"},
+    {"day": 20, "fajr": "04:35", "sunrise": "06:10", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:44", "isha": "21:10"},
+    {"day": 21, "fajr": "04:36", "sunrise": "06:10", "dhuhr": "13:01", "asr": "16:31", "maghrib": "19:44", "isha": "21:10"},
+    {"day": 22, "fajr": "04:37", "sunrise": "06:11", "dhuhr": "13:01", "asr": "16:32", "maghrib": "19:44", "isha": "21:10"},
+    {"day": 23, "fajr": "04:38", "sunrise": "06:12", "dhuhr": "13:01", "asr": "16:32", "maghrib": "19:44", "isha": "21:10"},
+    {"day": 24, "fajr": "04:38", "sunrise": "06:12", "dhuhr": "13:01", "asr": "16:33", "maghrib": "19:43", "isha": "21:09"},
+    {"day": 25, "fajr": "04:39", "sunrise": "06:13", "dhuhr": "13:01", "asr": "16:33", "maghrib": "19:43", "isha": "21:08"},
+    {"day": 26, "fajr": "04:40", "sunrise": "06:14", "dhuhr": "13:01", "asr": "16:34", "maghrib": "19:43", "isha": "21:08"},
+    {"day": 27, "fajr": "04:41", "sunrise": "06:14", "dhuhr": "13:01", "asr": "16:34", "maghrib": "19:43", "isha": "21:08"},
+    {"day": 28, "fajr": "04:42", "sunrise": "06:15", "dhuhr": "13:01", "asr": "16:35", "maghrib": "19:43", "isha": "21:08"},
+    {"day": 29, "fajr": "04:42", "sunrise": "06:15", "dhuhr": "13:01", "asr": "16:35", "maghrib": "19:42", "isha": "21:07"},
+    {"day": 30, "fajr": "04:43", "sunrise": "06:16", "dhuhr": "13:01", "asr": "16:35", "maghrib": "19:42", "isha": "21:07"},
+    {"day": 31, "fajr": "04:43", "sunrise": "06:17", "dhuhr": "13:01", "asr": "16:35", "maghrib": "19:41", "isha": "21:05"},
+  ];
+
+  // شهر august
+  static const List<Map<String, dynamic>> augustTimes = [
+    {"day": 1, "fajr": "04:44", "sunrise": "06:17", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:41", "isha": "21:05"},
+    {"day": 2, "fajr": "04:45", "sunrise": "06:18", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:41", "isha": "21:05"},
+    {"day": 3, "fajr": "04:46", "sunrise": "06:18", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:40", "isha": "21:03"},
+    {"day": 4, "fajr": "04:47", "sunrise": "06:18", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:39", "isha": "21:02"},
+    {"day": 5, "fajr": "04:48", "sunrise": "06:19", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:39", "isha": "21:02"},
+    {"day": 6, "fajr": "04:48", "sunrise": "06:20", "dhuhr": "13:01", "asr": "16:36", "maghrib": "19:38", "isha": "21:02"},
+    {"day": 7, "fajr": "04:50", "sunrise": "06:20", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:38", "isha": "21:00"},
+    {"day": 8, "fajr": "04:51", "sunrise": "06:21", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:37", "isha": "20:59"},
+    {"day": 9, "fajr": "04:52", "sunrise": "06:22", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:37", "isha": "20:59"},
+    {"day": 10, "fajr": "04:53", "sunrise": "06:22", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:36", "isha": "20:58"},
+    {"day": 11, "fajr": "04:54", "sunrise": "06:23", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:35", "isha": "20:57"},
+    {"day": 12, "fajr": "04:54", "sunrise": "06:23", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:34", "isha": "20:56"},
+    {"day": 13, "fajr": "04:54", "sunrise": "06:24", "dhuhr": "13:00", "asr": "16:36", "maghrib": "19:33", "isha": "20:54"},
+    {"day": 14, "fajr": "04:55", "sunrise": "06:24", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:32", "isha": "20:53"},
+    {"day": 15, "fajr": "04:56", "sunrise": "06:24", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:31", "isha": "20:52"},
+    {"day": 16, "fajr": "04:56", "sunrise": "06:25", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:30", "isha": "20:51"},
+    {"day": 17, "fajr": "04:58", "sunrise": "06:25", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:30", "isha": "20:51"},
+    {"day": 18, "fajr": "04:59", "sunrise": "06:25", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:29", "isha": "20:49"},
+    {"day": 19, "fajr": "05:00", "sunrise": "06:26", "dhuhr": "13:00", "asr": "16:35", "maghrib": "19:29", "isha": "20:49"},
+    {"day": 20, "fajr": "05:01", "sunrise": "06:26", "dhuhr": "12:59", "asr": "16:35", "maghrib": "19:28", "isha": "20:48"},
+    {"day": 21, "fajr": "05:02", "sunrise": "06:27", "dhuhr": "12:59", "asr": "16:34", "maghrib": "19:27", "isha": "20:47"},
+    {"day": 22, "fajr": "05:02", "sunrise": "06:27", "dhuhr": "12:59", "asr": "16:34", "maghrib": "19:26", "isha": "20:46"},
+    {"day": 23, "fajr": "05:03", "sunrise": "06:28", "dhuhr": "12:59", "asr": "16:34", "maghrib": "19:25", "isha": "20:44"},
+    {"day": 24, "fajr": "05:04", "sunrise": "06:29", "dhuhr": "12:58", "asr": "16:33", "maghrib": "19:24", "isha": "20:43"},
+    {"day": 25, "fajr": "05:04", "sunrise": "06:29", "dhuhr": "12:58", "asr": "16:33", "maghrib": "19:23", "isha": "20:42"},
+    {"day": 26, "fajr": "05:05", "sunrise": "06:29", "dhuhr": "12:58", "asr": "16:33", "maghrib": "19:22", "isha": "20:41"},
+    {"day": 27, "fajr": "05:05", "sunrise": "06:30", "dhuhr": "12:57", "asr": "16:32", "maghrib": "19:21", "isha": "20:40"},
+    {"day": 28, "fajr": "05:06", "sunrise": "06:30", "dhuhr": "12:57", "asr": "16:32", "maghrib": "19:20", "isha": "20:38"},
+    {"day": 29, "fajr": "05:07", "sunrise": "06:31", "dhuhr": "12:57", "asr": "16:32", "maghrib": "19:19", "isha": "20:37"},
+    {"day": 30, "fajr": "05:08", "sunrise": "06:31", "dhuhr": "12:57", "asr": "16:32", "maghrib": "19:18", "isha": "20:36"},
+    {"day": 31, "fajr": "05:08", "sunrise": "06:31", "dhuhr": "12:56", "asr": "16:31", "maghrib": "19:16", "isha": "20:34"},
+  ];
+
   // شهر سبتمبر (الشهر 9) - محافظة الأقصر (توقيت صيفي معتمد)
   static const List<Map<String, dynamic>> septemberTimes = [
     {"day": 1, "fajr": "05:08", "sunrise": "06:32", "dhuhr": "12:56", "asr": "16:30", "maghrib": "19:15", "isha": "20:33"},
@@ -263,9 +541,139 @@ class PrayerData {
     {"day": 30, "fajr": "05:23", "sunrise": "06:44", "dhuhr": "12:49", "asr": "16:12", "maghrib": "18:44", "isha": "19:58"},
   ];
 
-  // خريطة لتخزين شهور السنة كاملة (يمكنك إضافة الشهور 1 إلى 12 تباعاً هنا)
+  // شهر أكتوبر (الشهر 10) - محافظة الأقصر (توقيت صيفي معتمد)
+  static const List<Map<String, dynamic>> octoberTimes = [
+    {"day": 1, "fajr": "05:24", "sunrise": "06:44", "dhuhr": "12:49", "asr": "16:11", "maghrib": "18:43", "isha": "19:57"},
+    {"day": 2, "fajr": "05:24", "sunrise": "06:44", "dhuhr": "12:48", "asr": "16:11", "maghrib": "18:42", "isha": "19:56"},
+    {"day": 3, "fajr": "05:25", "sunrise": "06:45", "dhuhr": "12:48", "asr": "16:10", "maghrib": "18:41", "isha": "19:55"},
+    {"day": 4, "fajr": "05:26", "sunrise": "06:45", "dhuhr": "12:48", "asr": "16:10", "maghrib": "18:40", "isha": "19:54"},
+    {"day": 5, "fajr": "05:26", "sunrise": "06:46", "dhuhr": "12:47", "asr": "16:09", "maghrib": "18:39", "isha": "19:53"},
+    {"day": 6, "fajr": "05:26", "sunrise": "06:47", "dhuhr": "12:47", "asr": "16:08", "maghrib": "18:38", "isha": "19:52"},
+    {"day": 7, "fajr": "05:27", "sunrise": "06:47", "dhuhr": "12:47", "asr": "16:08", "maghrib": "18:37", "isha": "19:51"},
+    {"day": 8, "fajr": "05:28", "sunrise": "06:48", "dhuhr": "12:47", "asr": "16:07", "maghrib": "18:36", "isha": "19:50"},
+    {"day": 9, "fajr": "05:28", "sunrise": "06:48", "dhuhr": "12:47", "asr": "16:06", "maghrib": "18:35", "isha": "19:49"},
+    {"day": 10, "fajr": "05:30", "sunrise": "06:49", "dhuhr": "12:47", "asr": "16:06", "maghrib": "18:35", "isha": "19:49"},
+    {"day": 11, "fajr": "05:31", "sunrise": "06:49", "dhuhr": "12:47", "asr": "16:05", "maghrib": "18:34", "isha": "19:48"},
+    {"day": 12, "fajr": "05:31", "sunrise": "06:49", "dhuhr": "12:47", "asr": "16:05", "maghrib": "18:32", "isha": "19:47"},
+    {"day": 13, "fajr": "05:31", "sunrise": "06:50", "dhuhr": "12:46", "asr": "16:04", "maghrib": "18:31", "isha": "19:46"},
+    {"day": 14, "fajr": "05:32", "sunrise": "06:51", "dhuhr": "12:46", "asr": "16:03", "maghrib": "18:31", "isha": "19:45"},
+    {"day": 15, "fajr": "05:33", "sunrise": "06:52", "dhuhr": "12:46", "asr": "16:03", "maghrib": "18:30", "isha": "19:44"},
+    {"day": 16, "fajr": "05:33", "sunrise": "06:52", "dhuhr": "12:46", "asr": "16:02", "maghrib": "18:29", "isha": "19:43"},
+    {"day": 17, "fajr": "05:33", "sunrise": "06:54", "dhuhr": "12:46", "asr": "16:01", "maghrib": "18:28", "isha": "19:43"},
+    {"day": 18, "fajr": "05:33", "sunrise": "06:54", "dhuhr": "12:46", "asr": "16:01", "maghrib": "18:27", "isha": "19:42"},
+    {"day": 19, "fajr": "05:33", "sunrise": "06:55", "dhuhr": "12:46", "asr": "16:00", "maghrib": "18:26", "isha": "19:41"},
+    {"day": 20, "fajr": "05:34", "sunrise": "06:55", "dhuhr": "12:46", "asr": "16:00", "maghrib": "18:25", "isha": "19:40"},
+    {"day": 21, "fajr": "05:35", "sunrise": "06:56", "dhuhr": "12:46", "asr": "15:59", "maghrib": "18:24", "isha": "19:39"},
+    {"day": 22, "fajr": "05:36", "sunrise": "06:56", "dhuhr": "12:46", "asr": "15:59", "maghrib": "18:24", "isha": "19:39"},
+    {"day": 23, "fajr": "05:37", "sunrise": "06:57", "dhuhr": "12:46", "asr": "15:58", "maghrib": "18:23", "isha": "19:38"},
+    {"day": 24, "fajr": "05:37", "sunrise": "06:57", "dhuhr": "12:46", "asr": "15:57", "maghrib": "18:22", "isha": "19:37"},
+    {"day": 25, "fajr": "05:38", "sunrise": "06:58", "dhuhr": "12:46", "asr": "15:56", "maghrib": "18:21", "isha": "19:36"},
+    {"day": 26, "fajr": "05:38", "sunrise": "06:58", "dhuhr": "12:46", "asr": "15:56", "maghrib": "18:20", "isha": "19:35"},
+    {"day": 27, "fajr": "05:38", "sunrise": "06:59", "dhuhr": "12:46", "asr": "15:55", "maghrib": "18:19", "isha": "19:34"},
+    {"day": 28, "fajr": "05:40", "sunrise": "07:00", "dhuhr": "12:46", "asr": "15:54", "maghrib": "18:19", "isha": "19:34"},
+    {"day": 29, "fajr": "05:40", "sunrise": "07:00", "dhuhr": "12:46", "asr": "15:54", "maghrib": "18:18", "isha": "19:33"},
+    {"day": 30, "fajr": "05:41", "sunrise": "07:01", "dhuhr": "12:46", "asr": "15:54", "maghrib": "18:17", "isha": "19:32"},
+    {"day": 31, "fajr": "05:41", "sunrise": "07:02", "dhuhr": "12:46", "asr": "15:53", "maghrib": "18:16", "isha": "19:31"},
+  ];
+
+  // شهر نوفمبر (الشهر 11) - محافظة الأقصر (توقيت صيفي معتمد)
+  static const List<Map<String, dynamic>> novemberTimes = [
+    {"day": 1, "fajr": "05:41", "sunrise": "07:03", "dhuhr": "12:46", "asr": "15:52", "maghrib": "18:15", "isha": "19:30"},
+    {"day": 2, "fajr": "05:42", "sunrise": "07:03", "dhuhr": "12:46", "asr": "15:52", "maghrib": "18:15", "isha": "19:30"},
+    {"day": 3, "fajr": "05:42", "sunrise": "07:04", "dhuhr": "12:46", "asr": "15:52", "maghrib": "18:14", "isha": "19:29"},
+    {"day": 4, "fajr": "05:42", "sunrise": "07:04", "dhuhr": "12:46", "asr": "15:51", "maghrib": "18:13", "isha": "19:28"},
+    {"day": 5, "fajr": "05:43", "sunrise": "07:05", "dhuhr": "12:46", "asr": "15:50", "maghrib": "18:12", "isha": "19:27"},
+    {"day": 6, "fajr": "05:44", "sunrise": "07:05", "dhuhr": "12:46", "asr": "15:50", "maghrib": "18:12", "isha": "19:27"},
+    {"day": 7, "fajr": "05:44", "sunrise": "07:05", "dhuhr": "12:46", "asr": "15:49", "maghrib": "18:11", "isha": "19:26"},
+    {"day": 8, "fajr": "05:45", "sunrise": "07:06", "dhuhr": "12:47", "asr": "15:49", "maghrib": "18:11", "isha": "19:26"},
+    {"day": 9, "fajr": "05:45", "sunrise": "07:07", "dhuhr": "12:47", "asr": "15:48", "maghrib": "18:10", "isha": "19:25"},
+    {"day": 10, "fajr": "05:46", "sunrise": "07:08", "dhuhr": "12:48", "asr": "15:48", "maghrib": "18:10", "isha": "19:25"},
+    {"day": 11, "fajr": "05:48", "sunrise": "07:09", "dhuhr": "12:48", "asr": "15:48", "maghrib": "18:10", "isha": "19:25"},
+    {"day": 12, "fajr": "05:48", "sunrise": "07:10", "dhuhr": "12:48", "asr": "15:48", "maghrib": "18:09", "isha": "19:24"},
+    {"day": 13, "fajr": "05:49", "sunrise": "07:11", "dhuhr": "12:49", "asr": "15:47", "maghrib": "18:09", "isha": "19:24"},
+    {"day": 14, "fajr": "05:49", "sunrise": "07:11", "dhuhr": "12:49", "asr": "15:47", "maghrib": "18:08", "isha": "19:23"},
+    {"day": 15, "fajr": "05:50", "sunrise": "07:12", "dhuhr": "12:49", "asr": "15:47", "maghrib": "18:08", "isha": "19:23"},
+    {"day": 16, "fajr": "05:50", "sunrise": "07:13", "dhuhr": "12:49", "asr": "15:47", "maghrib": "18:07", "isha": "19:22"},
+    {"day": 17, "fajr": "05:51", "sunrise": "07:14", "dhuhr": "12:49", "asr": "15:47", "maghrib": "18:07", "isha": "19:22"},
+    {"day": 18, "fajr": "05:52", "sunrise": "07:15", "dhuhr": "12:50", "asr": "15:47", "maghrib": "18:07", "isha": "19:22"},
+    {"day": 19, "fajr": "05:52", "sunrise": "07:16", "dhuhr": "12:51", "asr": "15:47", "maghrib": "18:07", "isha": "19:22"},
+    {"day": 20, "fajr": "05:53", "sunrise": "07:16", "dhuhr": "12:51", "asr": "15:47", "maghrib": "18:07", "isha": "19:22"},
+    {"day": 21, "fajr": "05:53", "sunrise": "07:17", "dhuhr": "12:51", "asr": "15:46", "maghrib": "18:06", "isha": "19:22"},
+    {"day": 22, "fajr": "05:54", "sunrise": "07:18", "dhuhr": "12:51", "asr": "15:46", "maghrib": "18:06", "isha": "19:22"},
+    {"day": 23, "fajr": "05:54", "sunrise": "07:18", "dhuhr": "12:52", "asr": "15:46", "maghrib": "18:06", "isha": "19:22"},
+    {"day": 24, "fajr": "05:54", "sunrise": "07:18", "dhuhr": "12:52", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 25, "fajr": "05:55", "sunrise": "07:19", "dhuhr": "12:52", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 26, "fajr": "05:56", "sunrise": "07:20", "dhuhr": "12:53", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 27, "fajr": "05:57", "sunrise": "07:21", "dhuhr": "12:53", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 28, "fajr": "05:57", "sunrise": "07:22", "dhuhr": "12:53", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 29, "fajr": "05:58", "sunrise": "07:22", "dhuhr": "12:54", "asr": "15:46", "maghrib": "18:05", "isha": "19:21"},
+    {"day": 30, "fajr": "05:58", "sunrise": "07:23", "dhuhr": "12:54", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+  ];
+
+  // شهر ديسمبر (الشهر 12) - محافظة الأقصر (توقيت صيفي معتمد)
+  static const List<Map<String, dynamic>> decemberTimes = [
+    {"day": 1, "fajr": "05:59", "sunrise": "07:23", "dhuhr": "12:54", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 2, "fajr": "05:59", "sunrise": "07:24", "dhuhr": "12:55", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 3, "fajr": "06:00", "sunrise": "07:25", "dhuhr": "12:55", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 4, "fajr": "06:00", "sunrise": "07:26", "dhuhr": "12:56", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 5, "fajr": "06:01", "sunrise": "07:26", "dhuhr": "12:56", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 6, "fajr": "06:02", "sunrise": "07:27", "dhuhr": "12:57", "asr": "15:46", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 7, "fajr": "06:02", "sunrise": "07:28", "dhuhr": "12:57", "asr": "15:47", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 8, "fajr": "06:02", "sunrise": "07:29", "dhuhr": "12:57", "asr": "15:47", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 9, "fajr": "06:03", "sunrise": "07:30", "dhuhr": "12:58", "asr": "15:47", "maghrib": "18:05", "isha": "19:22"},
+    {"day": 10, "fajr": "06:04", "sunrise": "07:31", "dhuhr": "12:59", "asr": "15:48", "maghrib": "18:06", "isha": "19:24"},
+    {"day": 11, "fajr": "06:04", "sunrise": "07:31", "dhuhr": "12:59", "asr": "15:48", "maghrib": "18:06", "isha": "19:24"},
+    {"day": 12, "fajr": "06:04", "sunrise": "07:31", "dhuhr": "12:59", "asr": "15:48", "maghrib": "18:06", "isha": "19:24"},
+    {"day": 13, "fajr": "06:05", "sunrise": "07:32", "dhuhr": "13:00", "asr": "15:48", "maghrib": "18:06", "isha": "19:24"},
+    {"day": 14, "fajr": "06:06", "sunrise": "07:33", "dhuhr": "13:01", "asr": "15:49", "maghrib": "18:07", "isha": "19:25"},
+    {"day": 15, "fajr": "06:06", "sunrise": "07:33", "dhuhr": "13:01", "asr": "15:49", "maghrib": "18:07", "isha": "19:25"},
+    {"day": 16, "fajr": "06:07", "sunrise": "07:34", "dhuhr": "13:01", "asr": "15:49", "maghrib": "18:07", "isha": "19:25"},
+    {"day": 17, "fajr": "06:08", "sunrise": "07:35", "dhuhr": "13:02", "asr": "15:50", "maghrib": "18:08", "isha": "19:26"},
+    {"day": 18, "fajr": "06:08", "sunrise": "07:35", "dhuhr": "13:03", "asr": "15:50", "maghrib": "18:08", "isha": "19:26"},
+    {"day": 19, "fajr": "06:08", "sunrise": "07:35", "dhuhr": "13:03", "asr": "15:50", "maghrib": "18:08", "isha": "19:26"},
+    {"day": 20, "fajr": "06:08", "sunrise": "07:35", "dhuhr": "13:03", "asr": "15:51", "maghrib": "18:08", "isha": "19:27"},
+    {"day": 21, "fajr": "06:09", "sunrise": "07:36", "dhuhr": "13:04", "asr": "15:51", "maghrib": "18:09", "isha": "19:28"},
+    {"day": 22, "fajr": "06:09", "sunrise": "07:36", "dhuhr": "13:04", "asr": "15:51", "maghrib": "18:09", "isha": "19:28"},
+    {"day": 23, "fajr": "06:10", "sunrise": "07:37", "dhuhr": "13:05", "asr": "15:52", "maghrib": "18:10", "isha": "19:29"},
+    {"day": 24, "fajr": "06:10", "sunrise": "07:37", "dhuhr": "13:05", "asr": "15:52", "maghrib": "18:10", "isha": "19:29"},
+    {"day": 25, "fajr": "06:11", "sunrise": "07:38", "dhuhr": "13:05", "asr": "15:53", "maghrib": "18:11", "isha": "19:30"},
+    {"day": 26, "fajr": "06:12", "sunrise": "07:39", "dhuhr": "13:06", "asr": "15:54", "maghrib": "18:12", "isha": "19:31"},
+    {"day": 27, "fajr": "06:12", "sunrise": "07:39", "dhuhr": "13:06", "asr": "15:54", "maghrib": "18:12", "isha": "19:31"},
+    {"day": 28, "fajr": "06:12", "sunrise": "07:40", "dhuhr": "13:07", "asr": "15:55", "maghrib": "18:13", "isha": "19:32"},
+    {"day": 29, "fajr": "06:13", "sunrise": "07:40", "dhuhr": "13:08", "asr": "15:56", "maghrib": "18:14", "isha": "19:33"},
+    {"day": 30, "fajr": "06:13", "sunrise": "07:40", "dhuhr": "13:08", "asr": "15:56", "maghrib": "18:14", "isha": "19:33"},
+    {"day": 31, "fajr": "06:13", "sunrise": "07:41", "dhuhr": "13:09", "asr": "15:57", "maghrib": "18:15", "isha": "19:34"},
+  ];
+
+  // خريطة لتخزين شهور السنة كاملة (12 شهراً)
   static const Map<int, List<Map<String, dynamic>>> allMonthsTimes = {
+    1: januaryTimes,
+    2: februaryTimes,
+    3: marchTimes,
+    4: aprilTimes,
+    5: mayTimes,
+    6: juneTimes,
+    7: julyTimes,
+    8: augustTimes,
     9: septemberTimes,
+    10: octoberTimes,
+    11: novemberTimes,
+    12: decemberTimes,
+  };
+
+  static const Map<int, String> monthNames = {
+    1: "يناير",
+    2: "فبراير",
+    3: "مارس",
+    4: "إبريل",
+    5: "مايو",
+    6: "يونيو",
+    7: "يوليو",
+    8: "أغسطس",
+    9: "سبتمبر",
+    10: "أكتوبر",
+    11: "نوفمبر",
+    12: "ديسمبر",
   };
 
   static const Map<String, int> iqamaMinutes = {
@@ -307,10 +715,13 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isSummerTime = true;
   bool _showIqama = true;
   bool _athanNotifications = true;
-  final int _selectedMonth = 9;
+  int _selectedMonth = 9;
 
   bool _isPlayingAudio = false;
   String _lastTriggeredAthanKey = '';
+  bool _isAlarmScreenOpen = false;
+  bool _isDownloadingImage = false;
+  final GlobalKey _scheduleRepaintKey = GlobalKey();
 
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -329,6 +740,164 @@ class _HomeScreenState extends State<HomeScreen>
     } catch (_) {}
   }
 
+  Future<void> _openOverlaySettings() async {
+    try {
+      await _audioChannel.invokeMethod('openOverlaySettings');
+    } catch (_) {
+      _showSnackBar('تعذر فتح إعدادات الظهور فوق التطبيقات');
+    }
+  }
+
+  Future<void> _openBatterySettings() async {
+    try {
+      await _audioChannel.invokeMethod('openBatterySettings');
+    } catch (_) {
+      _showSnackBar('تعذر فتح إعدادات البطارية');
+    }
+  }
+
+  void _showAthanAlarmScreen(String prayerName, String prayerIcon, String prayerTime12) {
+    if (_isAlarmScreenOpen) return;
+    _isAlarmScreenOpen = true;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1F1235), Color(0xFF0F231A), Color(0xFF0A0A1A)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: const Color(0xFFFFD700), width: 2.2),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700).withOpacity(0.35),
+                    blurRadius: 30,
+                    spreadRadius: 4,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFFFD700).withOpacity(0.15),
+                      border: Border.all(color: const Color(0xFFFFD700), width: 2),
+                    ),
+                    child: Center(
+                      child: Text(
+                        prayerIcon,
+                        style: const TextStyle(fontSize: 48),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    '🕌 حان الآن موعد أذان',
+                    style: GoogleFonts.cairo(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    prayerName,
+                    style: GoogleFonts.amiri(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFFFD700),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00D68F).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFF00D68F)),
+                    ),
+                    child: Text(
+                      'الوقت: $prayerTime12',
+                      style: GoogleFonts.cairo(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF00D68F),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '﴿ حَافِظُوا عَلَى الصَّلَوَاتِ وَالصَّلَاةِ الْوُسْطَىٰ وَقُومُوا لِلَّهِ قَانِتِينَ ﴾',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.amiri(
+                      fontSize: 14,
+                      color: const Color(0xFFFFECB3),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _stopAthanSound();
+                        _isAlarmScreenOpen = false;
+                        Navigator.pop(dialogCtx);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE53935),
+                        foregroundColor: Colors.white,
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      icon: const Icon(Icons.stop_circle_outlined, size: 28),
+                      label: Text(
+                        'إيقاف الأذان',
+                        style: GoogleFonts.cairo(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'دعاء بعد الأذان:\n«اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلَاةِ القَائِمَةِ، آتِ مُحَمَّداً الوَسِيلَةَ وَالفَضِيلَةَ، وَابْعَثْهُ مَقَاماً مَحمُوداً الَّذِي وَعَدْتَهُ»',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.cairo(
+                      fontSize: 11,
+                      color: Colors.white60,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      _isAlarmScreenOpen = false;
+    });
+  }
+
   void _checkAndTriggerAthan(Map<String, dynamic> todayData) {
     if (!_athanNotifications) return;
 
@@ -336,22 +905,25 @@ class _HomeScreenState extends State<HomeScreen>
     final currentMinute = _now.minute;
     final currentSecond = _now.second;
 
-    // افحص كل الصلوات الخمس ما عدا الشروق
     for (var meta in PrayerData.prayerMeta) {
       final key = meta['key']!;
-      if (key == 'sunrise') continue; // الشروق ليس له أذان
+      if (key == 'sunrise') continue;
 
       final adjusted = _adjustTime(key, todayData[key]!);
       final parts = adjusted.split(':');
       final pHour = int.parse(parts[0]);
       final pMinute = int.parse(parts[1]);
 
-      // في أول 3 ثوانٍ من دخول وقت الصلاة
       if (currentHour == pHour && currentMinute == pMinute && currentSecond <= 3) {
-        final triggerToken = '${_now.day}_$key';
+        final triggerToken = '${_now.month}_${_now.day}_$key';
         if (_lastTriggeredAthanKey != triggerToken) {
           _lastTriggeredAthanKey = triggerToken;
           _playAthanSound();
+          _showAthanAlarmScreen(
+            meta['name']!,
+            meta['icon']!,
+            _format12Hour(adjusted),
+          );
         }
       }
     }
@@ -360,6 +932,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+    _initSelectedMonth();
     _loadSettings();
 
     _pulseController = AnimationController(
@@ -379,6 +952,15 @@ class _HomeScreenState extends State<HomeScreen>
         _checkAndTriggerAthan(_getTodayData());
       }
     });
+  }
+
+  void _initSelectedMonth() {
+    final curM = DateTime.now().month;
+    if (PrayerData.allMonthsTimes.containsKey(curM)) {
+      _selectedMonth = curM;
+    } else {
+      _selectedMonth = 9;
+    }
   }
 
   @override
@@ -408,8 +990,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   String _adjustTime(String prayerKey, String time24) {
-    // مواعيد الجدول الأساسية مخزنة بالتوقيت الصيفي المعتمد لمحافظة الأقصر
-    // عند إلغاء تفعيل التوقيت الصيفي (التحويل للتوقيت الشتوي): يتم تأخير الصلوات ساعة (ما عدا الظهر)
     if (!_isSummerTime && prayerKey != 'dhuhr') {
       final parts = time24.split(':');
       int hour = int.parse(parts[0]);
@@ -434,9 +1014,7 @@ class _HomeScreenState extends State<HomeScreen>
     final monthList =
         PrayerData.allMonthsTimes[_selectedMonth] ?? PrayerData.septemberTimes;
     int currentDay = _now.day;
-    if (_now.month != _selectedMonth ||
-        currentDay < 1 ||
-        currentDay > monthList.length) {
+    if (currentDay < 1 || currentDay > monthList.length) {
       currentDay = 1;
     }
     return monthList.firstWhere(
@@ -449,8 +1027,11 @@ class _HomeScreenState extends State<HomeScreen>
     final monthList =
         PrayerData.allMonthsTimes[_selectedMonth] ?? PrayerData.septemberTimes;
     int tomorrowDay = _now.day + 1;
-    if (_now.month != _selectedMonth || tomorrowDay > monthList.length) {
-      tomorrowDay = 1;
+    if (tomorrowDay > monthList.length) {
+      final nextMonth = _selectedMonth == 12 ? 9 : _selectedMonth + 1;
+      final nextMonthList =
+          PrayerData.allMonthsTimes[nextMonth] ?? PrayerData.septemberTimes;
+      return _adjustTime('fajr', nextMonthList.first['fajr']);
     }
     final tomorrowData = monthList.firstWhere(
       (element) => element['day'] == tomorrowDay,
@@ -521,17 +1102,25 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _openWhatsApp(String phone) async {
-    final cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
-    final uri = Uri.parse("https://wa.me/$cleanPhone");
+    final cleanPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
+    final nativeUri = Uri.parse("whatsapp://send?phone=$cleanPhone");
+    final webUri = Uri.parse("https://api.whatsapp.com/send?phone=$cleanPhone");
+
     try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        _showSnackBar('تعذر فتح واتساب، الرقم: $phone');
+      if (await canLaunchUrl(nativeUri)) {
+        await launchUrl(nativeUri, mode: LaunchMode.externalNonBrowserApplication);
+        return;
       }
-    } catch (_) {
-      _showSnackBar('الرقم: $phone');
-    }
+    } catch (_) {}
+
+    try {
+      if (await canLaunchUrl(webUri)) {
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } catch (_) {}
+
+    _showSnackBar('الرقم: $phone');
   }
 
   void _showSnackBar(String text) {
@@ -590,6 +1179,8 @@ class _HomeScreenState extends State<HomeScreen>
                       const SizedBox(height: 18),
                       _buildPrayerCardsList(todayData, nextPrayer['key']),
                       const SizedBox(height: 14),
+                      _buildDownloadScheduleButton(todayData, arabicDate),
+                      const SizedBox(height: 14),
                       _buildTomorrowFajrCard(tomorrowFajr),
                       const SizedBox(height: 18),
                       _buildSettingsCard(),
@@ -603,6 +1194,15 @@ class _HomeScreenState extends State<HomeScreen>
                     ],
                   ),
                 ),
+              ),
+            ),
+            // Offscreen RepaintBoundary for generating prayer schedule card image
+            Positioned(
+              left: -9999,
+              top: -9999,
+              child: RepaintBoundary(
+                key: _scheduleRepaintKey,
+                child: _buildShareableScheduleCard(todayData, arabicDate),
               ),
             ),
           ],
@@ -669,7 +1269,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           Text(
-            'محافظة الأقصر - شهر سبتمبر',
+            'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
             style: GoogleFonts.cairo(
               fontSize: 12,
               color: const Color(0xFF00D68F),
@@ -758,16 +1358,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ],
           ),
-          if (_now.month != 9)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                'عرض مواعيد سبتمبر الافتراضية (يمكنك إضافة باقي الشهور في التحديثات)',
-                textAlign: TextAlign.center,
-                style:
-                    GoogleFonts.cairo(fontSize: 11, color: Colors.orangeAccent),
-              ),
-            ),
         ],
       ),
     );
@@ -1120,6 +1710,361 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
+          const SizedBox(height: 8),
+          // Overlay permission button
+          InkWell(
+            onTap: _openOverlaySettings,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1565C0).withOpacity(0.18),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF42A5F5).withOpacity(0.5)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.layers_outlined, color: Color(0xFF42A5F5), size: 22),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '🪟 السماح بالظهور فوق التطبيقات',
+                          style: GoogleFonts.cairo(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF42A5F5),
+                          ),
+                        ),
+                        Text(
+                          'مطلوب لعرض شاشة الأذان فوق التطبيقات الأخرى',
+                          style: GoogleFonts.cairo(fontSize: 10, color: Colors.white54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Battery optimization button
+          InkWell(
+            onTap: _openBatterySettings,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF4CAF50).withOpacity(0.12),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF66BB6A).withOpacity(0.5)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.battery_charging_full, color: Color(0xFF66BB6A), size: 22),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '🔋 إيقاف تحسين البطارية للتطبيق',
+                          style: GoogleFonts.cairo(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF66BB6A),
+                          ),
+                        ),
+                        Text(
+                          'يمنع نظام Android من إيقاف التطبيق في الخلفية',
+                          style: GoogleFonts.cairo(fontSize: 10, color: Colors.white54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDownloadScheduleButton(Map<String, dynamic> todayData, String arabicDate) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton.icon(
+        onPressed: _isDownloadingImage ? null : () => _captureAndSaveScheduleImage(todayData, arabicDate),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF00A86B),
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: const Color(0xFF00A86B).withOpacity(0.6),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          elevation: 4,
+          shadowColor: const Color(0xFF00D68F).withOpacity(0.4),
+        ),
+        icon: _isDownloadingImage
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+              )
+            : const Icon(Icons.download_rounded, size: 22),
+        label: Text(
+          _isDownloadingImage ? 'جاري إنشاء وحفظ الصورة...' : 'تحميل ميعاد صلاة اليوم',
+          style: GoogleFonts.cairo(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _captureAndSaveScheduleImage(Map<String, dynamic> todayData, String arabicDate) async {
+    setState(() => _isDownloadingImage = true);
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 150));
+      final boundary = _scheduleRepaintKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        _showSnackBar('تعذر تجهيز الصورة، حاول مجدداً');
+        setState(() => _isDownloadingImage = false);
+        return;
+      }
+
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        _showSnackBar('تعذر إنشاء ملف الصورة');
+        setState(() => _isDownloadingImage = false);
+        return;
+      }
+
+      final pngBytes = byteData.buffer.asUint8List();
+      final fileName = 'prayer_times_${_now.year}_${_now.month}_${_now.day}_${DateTime.now().millisecondsSinceEpoch}.png';
+
+      final success = await _audioChannel.invokeMethod<bool>('saveImageToGallery', {
+        'bytes': pngBytes,
+        'fileName': fileName,
+      });
+
+      if (success == true) {
+        _showSnackBar('✅ تم حفظ ميعاد صلاة اليوم في المعرض بنجاح');
+      } else {
+        _showSnackBar('تعذر حفظ الصورة');
+      }
+    } catch (e) {
+      _showSnackBar('حدث خطأ أثناء حفظ الصورة');
+    } finally {
+      if (mounted) {
+        setState(() => _isDownloadingImage = false);
+      }
+    }
+  }
+
+  Widget _buildShareableScheduleCard(Map<String, dynamic> todayData, String arabicDate) {
+    return Container(
+      width: 480,
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D0B1C),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.5), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.7),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Row of crescent and mosques
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('🕌', style: TextStyle(fontSize: 22)),
+              SizedBox(width: 10),
+              Text('✨', style: TextStyle(fontSize: 18)),
+              SizedBox(width: 10),
+              Text('🌙', style: TextStyle(fontSize: 26)),
+              SizedBox(width: 10),
+              Text('✨', style: TextStyle(fontSize: 18)),
+              SizedBox(width: 10),
+              Text('🕌', style: TextStyle(fontSize: 22)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'مواقيت الصلاة',
+            style: GoogleFonts.amiri(
+              fontSize: 34,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFFFD700),
+            ),
+          ),
+          Text(
+            '⭐ الشيخ حسين ⭐',
+            style: GoogleFonts.amiri(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFFFE082),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'مجموعة الشيخ حسين لتحفيظ القرآن الكريم',
+            style: GoogleFonts.cairo(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.white70,
+            ),
+          ),
+          Text(
+            'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
+            style: GoogleFonts.cairo(
+              fontSize: 13,
+              color: const Color(0xFF00D68F),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFD700).withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.3)),
+            ),
+            child: Text(
+              '﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.amiri(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFFFECB3),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Date Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF191636),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white12),
+            ),
+            child: Text(
+              arabicDate,
+              style: GoogleFonts.cairo(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFFFD700),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Prayer Cards List
+          ...PrayerData.prayerMeta.map((meta) {
+            final key = meta['key']!;
+            final name = meta['name']!;
+            final icon = meta['icon']!;
+            final rawTime = todayData[key]!;
+            final adjusted = _adjustTime(key, rawTime);
+            final formatted12 = _format12Hour(adjusted);
+            final iqama = PrayerData.iqamaMinutes[key] ?? 0;
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+              decoration: BoxDecoration(
+                color: const Color(0xFF14122E),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: const Color(0xFFFFD700).withOpacity(0.25),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(icon, style: const TextStyle(fontSize: 22)),
+                      const SizedBox(width: 10),
+                      Text(
+                        name,
+                        style: GoogleFonts.cairo(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      if (_showIqama && iqama > 0)
+                        Container(
+                          margin: const EdgeInsets.only(left: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFD700).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xFFFFD700).withOpacity(0.4),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: Text(
+                            'إقامة $iqama د',
+                            style: GoogleFonts.cairo(
+                              fontSize: 11,
+                              color: const Color(0xFFFFE082),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      Text(
+                        formatted12,
+                        style: GoogleFonts.cairo(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFFD700),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '🤲 نسألكم الدعاء • مجموعة الشيخ حسين 🤲',
+                style: GoogleFonts.cairo(
+                  fontSize: 11,
+                  color: Colors.white54,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -1142,7 +2087,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         icon: const Text('📋', style: TextStyle(fontSize: 20)),
         label: Text(
-          'عرض جدول شهر سبتمبر كاملاً (30 يوماً)',
+          'عرض جدول شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"} كاملاً',
           style: GoogleFonts.cairo(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -1189,7 +2134,7 @@ class _HomeScreenState extends State<HomeScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'مواقيت محافظة الأقصر - سبتمبر',
+                        'مواقيت محافظة الأقصر - ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
                         style: GoogleFonts.cairo(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -40,6 +40,81 @@ class MainActivity: FlutterActivity() {
                     val playing = mediaPlayer?.isPlaying ?: false
                     result.success(playing)
                 }
+                "openOverlaySettings" -> {
+                    try {
+                        val intent = android.content.Intent(
+                            android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            android.net.Uri.parse("package:$packageName")
+                        )
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        try {
+                            val fallbackIntent = android.content.Intent(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                            startActivity(fallbackIntent)
+                            result.success(true)
+                        } catch (ex: Exception) {
+                            result.error("SETTINGS_ERROR", ex.message, null)
+                        }
+                    }
+                }
+                "openBatterySettings" -> {
+                    try {
+                        val intent = android.content.Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        try {
+                            val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = android.net.Uri.parse("package:$packageName")
+                            }
+                            startActivity(intent)
+                            result.success(true)
+                        } catch (ex: Exception) {
+                            result.error("SETTINGS_ERROR", ex.message, null)
+                        }
+                    }
+                }
+                "saveImageToGallery" -> {
+                    try {
+                        val bytes = call.argument<ByteArray>("bytes")
+                        val fileName = call.argument<String>("fileName") ?: "prayer_times_${System.currentTimeMillis()}.png"
+                        if (bytes == null) {
+                            result.error("NULL_BYTES", "Image bytes are null", null)
+                            return@setMethodCallHandler
+                        }
+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                            val contentValues = android.content.ContentValues().apply {
+                                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                                put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                                put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES + "/PrayerTimes")
+                            }
+                            val resolver = contentResolver
+                            val uri = resolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                            if (uri != null) {
+                                resolver.openOutputStream(uri)?.use { os ->
+                                    os.write(bytes)
+                                }
+                                result.success(true)
+                            } else {
+                                result.error("INSERT_FAILED", "Failed to create MediaStore entry", null)
+                            }
+                        } else {
+                            val picturesDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_PICTURES)
+                            val appDir = java.io.File(picturesDir, "PrayerTimes")
+                            if (!appDir.exists()) appDir.mkdirs()
+                            val file = java.io.File(appDir, fileName)
+                            java.io.FileOutputStream(file).use { fos ->
+                                fos.write(bytes)
+                            }
+                            android.media.MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath), arrayOf("image/png"), null)
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        result.error("SAVE_ERROR", e.message, null)
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }
