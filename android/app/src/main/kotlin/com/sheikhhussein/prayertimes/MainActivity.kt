@@ -40,6 +40,30 @@ class MainActivity: FlutterActivity() {
                     val playing = mediaPlayer?.isPlaying ?: false
                     result.success(playing)
                 }
+                "checkOverlayPermission" -> {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            result.success(android.provider.Settings.canDrawOverlays(this))
+                        } else {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+                "checkBatteryPermission" -> {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            val powerManager = getSystemService(android.content.Context.POWER_SERVICE) as? android.os.PowerManager
+                            val isIgnoring = powerManager?.isIgnoringBatteryOptimizations(packageName) ?: false
+                            result.success(isIgnoring)
+                        } else {
+                            result.success(true)
+                        }
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
                 "openOverlaySettings" -> {
                     try {
                         val intent = android.content.Intent(
