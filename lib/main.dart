@@ -2045,7 +2045,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildShareableScheduleCard(Map<String, dynamic> todayData, String arabicDate) {
     return Container(
-      width: 480,
+      width: 500,
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
       decoration: BoxDecoration(
         color: const Color(0xFF0D0B1C),
@@ -2141,25 +2141,32 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           const SizedBox(height: 12),
-          // Date Badge
+          // Date Badge (Enlarged & Elegant)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
             decoration: BoxDecoration(
               color: const Color(0xFF191636),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.white12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.35), width: 1.2),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFFD700).withOpacity(0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Text(
               arabicDate,
               style: GoogleFonts.cairo(
-                fontSize: 15,
+                fontSize: 19,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFFFFD700),
               ),
             ),
           ),
           const SizedBox(height: 16),
-          // Prayer Cards List
+          // Prayer Cards List (Enlarged Prayer Names & Times)
           ...PrayerData.prayerMeta.map((meta) {
             final key = meta['key']!;
             final name = meta['name']!;
@@ -2171,7 +2178,7 @@ class _HomeScreenState extends State<HomeScreen>
 
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
               decoration: BoxDecoration(
                 color: const Color(0xFF14122E),
                 borderRadius: BorderRadius.circular(14),
@@ -2184,12 +2191,12 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Row(
                     children: [
-                      Text(icon, style: const TextStyle(fontSize: 22)),
-                      const SizedBox(width: 10),
+                      Text(icon, style: const TextStyle(fontSize: 25)),
+                      const SizedBox(width: 12),
                       Text(
                         name,
                         style: GoogleFonts.cairo(
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -2200,8 +2207,8 @@ class _HomeScreenState extends State<HomeScreen>
                     children: [
                       if (_showIqama && iqama > 0)
                         Container(
-                          margin: const EdgeInsets.only(left: 8),
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          margin: const EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFFD700).withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
@@ -2213,7 +2220,7 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Text(
                             'إقامة $iqama د',
                             style: GoogleFonts.cairo(
-                              fontSize: 11,
+                              fontSize: 12,
                               color: const Color(0xFFFFE082),
                               fontWeight: FontWeight.bold,
                             ),
@@ -2222,7 +2229,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Text(
                         formatted12,
                         style: GoogleFonts.cairo(
-                          fontSize: 16,
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFFFFD700),
                         ),
