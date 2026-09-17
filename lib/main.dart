@@ -725,8 +725,10 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isDownloadingImage = false;
   final GlobalKey _scheduleRepaintKey = GlobalKey();
 
+  bool _isNotificationGranted = false;
   bool _isOverlayGranted = false;
   bool _isBatteryOptimized = false;
+  bool _hasPromptedPermissionsOnLaunch = false;
 
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -747,15 +749,28 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _checkPermissions() async {
     try {
+      final notif = await _audioChannel.invokeMethod<bool>('checkNotificationPermission') ?? false;
       final overlay = await _audioChannel.invokeMethod<bool>('checkOverlayPermission') ?? false;
       final battery = await _audioChannel.invokeMethod<bool>('checkBatteryPermission') ?? false;
       if (mounted) {
         setState(() {
+          _isNotificationGranted = notif;
           _isOverlayGranted = overlay;
           _isBatteryOptimized = battery;
         });
       }
     } catch (_) {}
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    try {
+      await _audioChannel.invokeMethod('requestNotificationPermission');
+      await Future.delayed(const Duration(milliseconds: 600));
+      await _checkPermissions();
+      _scheduleBackgroundAlarms();
+    } catch (_) {
+      _showSnackBar('تعذر طلب إذن الإشعارات');
+    }
   }
 
   Future<void> _openOverlaySettings() async {
@@ -772,6 +787,57 @@ class _HomeScreenState extends State<HomeScreen>
     } catch (_) {
       _showSnackBar('تعذر فتح إعدادات البطارية');
     }
+  }
+
+  Future<void> _scheduleBackgroundAlarms() async {
+    try {
+      final todayData = _getTodayData();
+      final now = DateTime.now();
+      final List<Map<String, dynamic>> alarms = [];
+
+      for (var meta in PrayerData.prayerMeta) {
+        final key = meta['key']!;
+        if (key == 'sunrise') continue;
+
+        final adjusted = _adjustTime(key, todayData[key]!);
+        final parts = adjusted.split(':');
+        final pHour = int.parse(parts[0]);
+        final pMinute = int.parse(parts[1]);
+
+        final prayerDateTime = DateTime(now.year, now.month, now.day, pHour, pMinute);
+
+        // 1. منبه الأذان
+        if (_athanNotifications && prayerDateTime.isAfter(now)) {
+          alarms.add({
+            'id': (key.hashCode.abs() % 100000),
+            'timestamp': prayerDateTime.millisecondsSinceEpoch,
+            'type': 'athan',
+            'prayerName': meta['name'],
+            'title': '🕌 حان الآن موعد الصلاة',
+            'message': 'الله أكبر.. حان الآن موعد أذان ${meta['name']}',
+          });
+        }
+
+        // 2. تنبيه اقتراب الوقت بـ 15 دقيقة
+        if (_reminder15Min) {
+          final reminderDateTime = prayerDateTime.subtract(const Duration(minutes: 15));
+          if (reminderDateTime.isAfter(now)) {
+            alarms.add({
+              'id': ((key.hashCode.abs() + 50000) % 100000),
+              'timestamp': reminderDateTime.millisecondsSinceEpoch,
+              'type': 'reminder',
+              'prayerName': meta['name'],
+              'title': '🕌 اقتراب موعد الصلاة',
+              'message': 'متبقي 15 دقيقة على موعد ${meta['name']}',
+            });
+          }
+        }
+      }
+
+      if (alarms.isNotEmpty) {
+        await _audioChannel.invokeMethod('schedulePrayerAlarms', {'alarms': alarms});
+      }
+    } catch (_) {}
   }
 
   void _showAthanAlarmScreen(String prayerName, String prayerIcon, String prayerTime12) {
@@ -932,7 +998,7 @@ class _HomeScreenState extends State<HomeScreen>
       final pHour = int.parse(parts[0]);
       final pMinute = int.parse(parts[1]);
 
-      // 1. تنبيه اقتراب وقت الصلاة (باقي 15 دقيقة)
+      // 1. تنبيه اقتراب وقت الصلاة (باقي 15 دقيقة) - إشعار نظام حقيقي + رسالة
       if (_reminder15Min) {
         var remHour = pHour;
         var remMinute = pMinute - 15;
@@ -945,6 +1011,11 @@ class _HomeScreenState extends State<HomeScreen>
           final reminderToken = 'rem15_${_now.month}_${_now.day}_$key';
           if (_lastTriggered15MinKey != reminderToken) {
             _lastTriggered15MinKey = reminderToken;
+            _audioChannel.invokeMethod('showNotification', {
+              'title': '🕌 اقتراب موعد الصلاة',
+              'message': 'متبقي 15 دقيقة على موعد ${meta['name']}',
+              'isAthan': false,
+            });
             _showSnackBar('📢 اقترب موعد ${meta['name']} (متبقي 15 دقيقة)');
           }
         }
@@ -955,6 +1026,11 @@ class _HomeScreenState extends State<HomeScreen>
         final triggerToken = '${_now.month}_${_now.day}_$key';
         if (_lastTriggeredAthanKey != triggerToken) {
           _lastTriggeredAthanKey = triggerToken;
+          _audioChannel.invokeMethod('showNotification', {
+            'title': '🕌 حان الآن موعد الصلاة',
+            'message': 'الله أكبر.. حان الآن موعد أذان ${meta['name']}',
+            'isAthan': true,
+          });
           _playAthanSound();
           _showAthanAlarmScreen(
             meta['name']!,
@@ -966,13 +1042,216 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  void _showPermissionSetupDialog([bool forceShow = false]) {
+    if (!forceShow && _isNotificationGranted && _isBatteryOptimized && _isOverlayGranted) {
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomCtx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              decoration: const BoxDecoration(
+                color: Color(0xFF14122E),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28),
+                  topRight: Radius.circular(28),
+                ),
+                border: Border(
+                  top: BorderSide(color: Color(0xFFFFD700), width: 1.5),
+                  left: BorderSide(color: Color(0xFFFFD700), width: 0.5),
+                  right: BorderSide(color: Color(0xFFFFD700), width: 0.5),
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('🕌', style: TextStyle(fontSize: 26)),
+                        const SizedBox(width: 10),
+                        Text(
+                          'تفعيل أنماط الأذان والتنبيهات',
+                          style: GoogleFonts.amiri(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFFFD700),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'لضمان وصول إشعار التذكير قبل الصلاة بـ 15 دقيقة وانطلاق صوت الأذان في موعده بالثانية، يُرجى تفعيل الصلاحيات التالية:',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.cairo(
+                        fontSize: 12.5,
+                        color: Colors.white70,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    _buildPermissionItemInModal(
+                      icon: Icons.notifications_active_rounded,
+                      title: 'إذن الإشعارات',
+                      desc: 'إرسال إشعار التنبيه قبل الصلاة بـ 15 دقيقة والأذان',
+                      isGranted: _isNotificationGranted,
+                      onTap: () async {
+                        await _requestNotificationPermission();
+                        await _checkPermissions();
+                        setModalState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    _buildPermissionItemInModal(
+                      icon: Icons.battery_charging_full_rounded,
+                      title: 'إيقاف تحسين البطارية',
+                      desc: 'يمنع النظام من إيقاف أو تأخير الأذان في الخلفية',
+                      isGranted: _isBatteryOptimized,
+                      onTap: () async {
+                        await _openBatterySettings();
+                        await Future.delayed(const Duration(milliseconds: 600));
+                        await _checkPermissions();
+                        setModalState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    _buildPermissionItemInModal(
+                      icon: Icons.layers_outlined,
+                      title: 'الظهور فوق التطبيقات',
+                      desc: 'لعرض شاشة ومنبه الأذان الكبيرة عند دخول وقت الصلاة',
+                      isGranted: _isOverlayGranted,
+                      onTap: () async {
+                        await _openOverlaySettings();
+                        await Future.delayed(const Duration(milliseconds: 600));
+                        await _checkPermissions();
+                        setModalState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(bottomCtx);
+                          _scheduleBackgroundAlarms();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFFD700),
+                          foregroundColor: const Color(0xFF0F0B1E),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 4,
+                        ),
+                        child: Text(
+                          'حفظ ومتابعة التطبيق',
+                          style: GoogleFonts.cairo(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPermissionItemInModal({
+    required IconData icon,
+    required String title,
+    required String desc,
+    required bool isGranted,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: isGranted ? const Color(0xFF00A86B).withOpacity(0.15) : const Color(0xFF1E1A3C),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isGranted ? const Color(0xFF00D68F) : const Color(0xFFFFD700).withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isGranted ? Icons.check_circle_rounded : icon,
+            color: isGranted ? const Color(0xFF00D68F) : const Color(0xFFFFD700),
+            size: 26,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.cairo(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  desc,
+                  style: GoogleFonts.cairo(
+                    fontSize: 10.5,
+                    color: Colors.white54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: onTap,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isGranted ? const Color(0xFF00D68F) : const Color(0xFFFFD700),
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              minimumSize: const Size(60, 32),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text(
+              isGranted ? 'مفعّل ✓' : 'تفعيل',
+              style: GoogleFonts.cairo(fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initSelectedMonth();
     _loadSettings();
-    _checkPermissions();
 
     _pulseController = AnimationController(
       vsync: this,
@@ -991,12 +1270,22 @@ class _HomeScreenState extends State<HomeScreen>
         _checkAndTriggerAthan(_getTodayData());
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkPermissions();
+      _scheduleBackgroundAlarms();
+      if (!_hasPromptedPermissionsOnLaunch && (!_isNotificationGranted || !_isBatteryOptimized || !_isOverlayGranted)) {
+        _hasPromptedPermissionsOnLaunch = true;
+        _showPermissionSetupDialog();
+      }
+    });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _checkPermissions();
+      _scheduleBackgroundAlarms();
     }
   }
 
@@ -1831,6 +2120,72 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           const SizedBox(height: 8),
+          // Notification permission button with live checkmark
+          InkWell(
+            onTap: _requestNotificationPermission,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: _isNotificationGranted
+                    ? const Color(0xFF00A86B).withOpacity(0.18)
+                    : const Color(0xFF9C27B0).withOpacity(0.18),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: _isNotificationGranted
+                      ? const Color(0xFF00D68F)
+                      : const Color(0xFFBA68C8).withOpacity(0.5),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    _isNotificationGranted ? Icons.check_circle : Icons.notifications_active_outlined,
+                    color: _isNotificationGranted ? const Color(0xFF00D68F) : const Color(0xFFBA68C8),
+                    size: 22,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '🔔 السماح بإرسال الإشعارات',
+                              style: GoogleFonts.cairo(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: _isNotificationGranted ? const Color(0xFF00D68F) : const Color(0xFFBA68C8),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: _isNotificationGranted ? const Color(0xFF00D68F) : Colors.orange,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                _isNotificationGranted ? 'مفعل ✓' : 'اضغط للتفعيل',
+                                style: GoogleFonts.cairo(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          'مطلوب لإرسال إشعار التنبيه قبل الصلاة بـ 15 دقيقة',
+                          style: GoogleFonts.cairo(fontSize: 10, color: Colors.white54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           // Overlay permission button with live checkmark
           InkWell(
             onTap: _openOverlaySettings,
@@ -1958,6 +2313,39 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Prominent all-modes setup button
+          InkWell(
+            onTap: () => _showPermissionSetupDialog(true),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 14),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2E1F4D), Color(0xFF1B3326)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.5)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('✨', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 8),
+                  Text(
+                    'تفعيل كل الأنماط والصلاحيات دفعة واحدة',
+                    style: GoogleFonts.cairo(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFFFD700),
+                    ),
+                  ),
                 ],
               ),
             ),
