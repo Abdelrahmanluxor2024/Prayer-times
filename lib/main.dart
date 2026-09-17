@@ -1286,9 +1286,9 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'مواقيت الصلاة',
+            'مواقيت الصلاة - الأقصر',
             style: GoogleFonts.amiri(
-              fontSize: 32,
+              fontSize: 34,
               fontWeight: FontWeight.bold,
               color: const Color(0xFFFFD700),
               shadows: [
@@ -1299,23 +1299,25 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
-          Text(
-            '⭐ الشيخ حسين ⭐',
-            style: GoogleFonts.amiri(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFFFE082),
-            ),
-          ),
           const SizedBox(height: 4),
-          Text(
-            'مجموعة الشيخ حسين لتحفيظ القرآن الكريم',
-            style: GoogleFonts.cairo(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.white70,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('⭐', style: TextStyle(fontSize: 22, color: Color(0xFFFFD700))),
+              const SizedBox(width: 8),
+              Text(
+                'حسين الشعار ابو العبادلة',
+                style: GoogleFonts.amiri(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFFE082),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text('⭐', style: TextStyle(fontSize: 22, color: Color(0xFFFFD700))),
+            ],
           ),
+          const SizedBox(height: 6),
           PopupMenuButton<int>(
             initialValue: _selectedMonth,
             onSelected: (int month) {
@@ -1352,26 +1354,26 @@ class _HomeScreenState extends State<HomeScreen>
               }).toList();
             },
             child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF00A86B).withOpacity(0.15),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFF00D68F).withOpacity(0.5)),
+                color: const Color(0xFF003B2B).withOpacity(0.4),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF00A86B).withOpacity(0.8), width: 1.5),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF00D68F), size: 22),
+                  const SizedBox(width: 8),
                   Text(
                     'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
                     style: GoogleFonts.cairo(
-                      fontSize: 13,
+                      fontSize: 14,
                       color: const Color(0xFF00D68F),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF00D68F), size: 18),
                 ],
               ),
             ),
@@ -2077,36 +2079,46 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           const SizedBox(height: 10),
           Text(
-            'مواقيت الصلاة',
+            'مواقيت الصلاة - الأقصر',
             style: GoogleFonts.amiri(
-              fontSize: 34,
+              fontSize: 36,
               fontWeight: FontWeight.bold,
               color: const Color(0xFFFFD700),
             ),
           ),
-          Text(
-            '⭐ الشيخ حسين ⭐',
-            style: GoogleFonts.amiri(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFFFE082),
-            ),
-          ),
           const SizedBox(height: 4),
-          Text(
-            'مجموعة الشيخ حسين لتحفيظ القرآن الكريم',
-            style: GoogleFonts.cairo(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.white70,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('⭐', style: TextStyle(fontSize: 24, color: Color(0xFFFFD700))),
+              const SizedBox(width: 8),
+              Text(
+                'حسين الشعار ابو العبادلة',
+                style: GoogleFonts.amiri(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFFE082),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text('⭐', style: TextStyle(fontSize: 24, color: Color(0xFFFFD700))),
+            ],
           ),
-          Text(
-            'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
-            style: GoogleFonts.cairo(
-              fontSize: 13,
-              color: const Color(0xFF00D68F),
-              fontWeight: FontWeight.bold,
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF003B2B).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFF00A86B), width: 1.5),
+            ),
+            child: Text(
+              'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
+              style: GoogleFonts.cairo(
+                fontSize: 14,
+                color: const Color(0xFF00D68F),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 12),
