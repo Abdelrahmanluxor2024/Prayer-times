@@ -37,17 +37,46 @@ class MainActivity: FlutterActivity() {
                 "playAthan" -> {
                     try {
                         mediaPlayer?.release()
-                        val audioAttributes = AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setLegacyStreamType(AudioManager.STREAM_RING)
-                            .build()
-                        mediaPlayer = MediaPlayer.create(this, R.raw.aaa, audioAttributes, 0)
-                        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_RING)
-                        mediaPlayer?.start()
-                        result.success(true)
+                        mediaPlayer = null
+
+                        val afd = resources.openRawResourceFd(R.raw.aaa)
+                        if (afd != null) {
+                            val mp = MediaPlayer()
+                            val audioAttributes = AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                .setLegacyStreamType(AudioManager.STREAM_RING)
+                                .build()
+                            mp.setAudioAttributes(audioAttributes)
+                            mp.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                            afd.close()
+                            mp.prepare()
+                            mp.setVolume(1.0f, 1.0f)
+                            mp.setOnCompletionListener {
+                                it.release()
+                                if (mediaPlayer == it) {
+                                    mediaPlayer = null
+                                }
+                            }
+                            mp.start()
+                            mediaPlayer = mp
+                            result.success(true)
+                        } else {
+                            val mp = MediaPlayer.create(this, R.raw.aaa)
+                            mp?.start()
+                            mediaPlayer = mp
+                            result.success(true)
+                        }
                     } catch (e: Exception) {
-                        result.error("AUDIO_ERROR", e.message, null)
+                        try {
+                            mediaPlayer?.release()
+                            val mp = MediaPlayer.create(this, R.raw.aaa)
+                            mp?.start()
+                            mediaPlayer = mp
+                            result.success(true)
+                        } catch (ex: Exception) {
+                            result.error("AUDIO_ERROR", ex.message, null)
+                        }
                     }
                 }
                 "stopAthan" -> {
@@ -55,15 +84,23 @@ class MainActivity: FlutterActivity() {
                         if (mediaPlayer?.isPlaying == true) {
                             mediaPlayer?.stop()
                         }
+                    } catch (_: Exception) {}
+                    try {
                         mediaPlayer?.release()
-                        mediaPlayer = null
-                        result.success(true)
-                    } catch (e: Exception) {
-                        result.error("AUDIO_ERROR", e.message, null)
-                    }
+                    } catch (_: Exception) {}
+                    mediaPlayer = null
+
+                    try {
+                        if (PrayerAlarmReceiver.mediaPlayer?.isPlaying == true) {
+                            PrayerAlarmReceiver.mediaPlayer?.stop()
+                        }
+                        PrayerAlarmReceiver.mediaPlayer?.release()
+                        PrayerAlarmReceiver.mediaPlayer = null
+                    } catch (_: Exception) {}
+                    result.success(true)
                 }
                 "isPlaying" -> {
-                    val playing = mediaPlayer?.isPlaying ?: false
+                    val playing = (mediaPlayer?.isPlaying == true) || (PrayerAlarmReceiver.mediaPlayer?.isPlaying == true)
                     result.success(playing)
                 }
                 "checkNotificationPermission" -> {

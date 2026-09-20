@@ -69,17 +69,54 @@ class PrayerAlarmReceiver : BroadcastReceiver() {
             }
 
             if (type == "athan") {
+                var athanWakeLock: PowerManager.WakeLock? = null
                 try {
+                    val pm2 = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+                    athanWakeLock = pm2?.newWakeLock(
+                        PowerManager.PARTIAL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                        "PrayerTimes:AthanPlayWakeLock"
+                    )
+                    athanWakeLock?.acquire(35000L)
+
                     mediaPlayer?.release()
-                    val audioAttributes = AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setLegacyStreamType(AudioManager.STREAM_RING)
-                        .build()
-                    mediaPlayer = MediaPlayer.create(context, R.raw.aaa, audioAttributes, 0)
-                    mediaPlayer?.setAudioStreamType(AudioManager.STREAM_RING)
-                    mediaPlayer?.start()
-                } catch (_: Exception) {}
+                    mediaPlayer = null
+
+                    val afd = context.resources.openRawResourceFd(R.raw.aaa)
+                    if (afd != null) {
+                        val mp = MediaPlayer()
+                        val audioAttributes = AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setLegacyStreamType(AudioManager.STREAM_RING)
+                            .build()
+                        mp.setAudioAttributes(audioAttributes)
+                        mp.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                        afd.close()
+                        mp.prepare()
+                        mp.setVolume(1.0f, 1.0f)
+                        mp.setOnCompletionListener {
+                            it.release()
+                            mediaPlayer = null
+                            try {
+                                if (athanWakeLock?.isHeld == true) {
+                                    athanWakeLock.release()
+                                }
+                            } catch (_: Exception) {}
+                        }
+                        mp.start()
+                        mediaPlayer = mp
+                    } else {
+                        val mp = MediaPlayer.create(context, R.raw.aaa)
+                        mp?.start()
+                        mediaPlayer = mp
+                    }
+                } catch (e: Exception) {
+                    try {
+                        val mp = MediaPlayer.create(context, R.raw.aaa)
+                        mp?.start()
+                        mediaPlayer = mp
+                    } catch (_: Exception) {}
+                }
             }
         } finally {
             if (wakeLock?.isHeld == true) {
