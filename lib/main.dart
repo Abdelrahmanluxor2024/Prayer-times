@@ -696,6 +696,182 @@ class PrayerData {
 }
 
 // -------------------------------------------------------------
+// أنماط الخلفيات الإمبراطورية الملكية لبطاقة مواقيت الصلاة
+// -------------------------------------------------------------
+class ImperialTheme {
+  final String id;
+  final String name;
+  final Color bgStart;
+  final Color bgEnd;
+  final Color cardBg;
+  final Color borderColor;
+  final Color accentGold;
+  final Color subGold;
+  final Color iqamaColor;
+  final Color dateBadgeBg;
+
+  const ImperialTheme({
+    required this.id,
+    required this.name,
+    required this.bgStart,
+    required this.bgEnd,
+    required this.cardBg,
+    required this.borderColor,
+    required this.accentGold,
+    required this.subGold,
+    required this.iqamaColor,
+    required this.dateBadgeBg,
+  });
+
+  static const List<ImperialTheme> themes = [
+    ImperialTheme(
+      id: 'burgundy',
+      name: 'عنابي إمبراطوري',
+      bgStart: Color(0xFF380208),
+      bgEnd: Color(0xFF140104),
+      cardBg: Color(0xFF260408),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFFFD54F),
+      dateBadgeBg: Color(0xFF4A050D),
+    ),
+    ImperialTheme(
+      id: 'midnight_navy',
+      name: 'كحلي ملكي',
+      bgStart: Color(0xFF071428),
+      bgEnd: Color(0xFF030811),
+      cardBg: Color(0xFF0D1C34),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFFFD54F),
+      dateBadgeBg: Color(0xFF0F2342),
+    ),
+    ImperialTheme(
+      id: 'emerald',
+      name: 'أخضر زمردي',
+      bgStart: Color(0xFF032616),
+      bgEnd: Color(0xFF01120A),
+      cardBg: Color(0xFF073821),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFF80E8BA),
+      dateBadgeBg: Color(0xFF0B462A),
+    ),
+    ImperialTheme(
+      id: 'onyx_black',
+      name: 'أسود ملكي فاخر',
+      bgStart: Color(0xFF121212),
+      bgEnd: Color(0xFF050505),
+      cardBg: Color(0xFF1C1C1C),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFFFD54F),
+      dateBadgeBg: Color(0xFF262626),
+    ),
+    ImperialTheme(
+      id: 'royal_purple',
+      name: 'أرجواني ملكي',
+      bgStart: Color(0xFF2A0A38),
+      bgEnd: Color(0xFF100217),
+      cardBg: Color(0xFF38104A),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFCE93D8),
+      dateBadgeBg: Color(0xFF47175E),
+    ),
+    ImperialTheme(
+      id: 'petroleum_blue',
+      name: 'أزرق بترولي',
+      bgStart: Color(0xFF06232E),
+      bgEnd: Color(0xFF020E13),
+      cardBg: Color(0xFF0A3444),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFF80DEEA),
+      dateBadgeBg: Color(0xFF0F4257),
+    ),
+    ImperialTheme(
+      id: 'ruby_red',
+      name: 'ياقوتي دافئ',
+      bgStart: Color(0xFF2E0911),
+      bgEnd: Color(0xFF120306),
+      cardBg: Color(0xFF400E19),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFFFAB91),
+      dateBadgeBg: Color(0xFF521522),
+    ),
+    ImperialTheme(
+      id: 'deep_slate',
+      name: 'بلاتيني داكن',
+      bgStart: Color(0xFF1A1F2C),
+      bgEnd: Color(0xFF0C0E14),
+      cardBg: Color(0xFF242B3D),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFF90CAF9),
+      dateBadgeBg: Color(0xFF303A52),
+    ),
+    ImperialTheme(
+      id: 'ottoman_teal',
+      name: 'تركواز عثماني',
+      bgStart: Color(0xFF022B29),
+      bgEnd: Color(0xFF011413),
+      cardBg: Color(0xFF053E3B),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFA7FFEB),
+      dateBadgeBg: Color(0xFF074E4A),
+    ),
+    ImperialTheme(
+      id: 'bronze_amber',
+      name: 'برونزي كهرماني',
+      bgStart: Color(0xFF2E1B05),
+      bgEnd: Color(0xFF130A01),
+      cardBg: Color(0xFF3F2609),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFFFCC80),
+      dateBadgeBg: Color(0xFF50320E),
+    ),
+    ImperialTheme(
+      id: 'deep_olive',
+      name: 'زيتوني ملكي',
+      bgStart: Color(0xFF1D2604),
+      bgEnd: Color(0xFF0C1101),
+      cardBg: Color(0xFF2C3909),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFDCE775),
+      dateBadgeBg: Color(0xFF3B4D0F),
+    ),
+    ImperialTheme(
+      id: 'twilight_dusk',
+      name: 'شفق ملكي',
+      bgStart: Color(0xFF200F2E),
+      bgEnd: Color(0xFF090310),
+      cardBg: Color(0xFF311747),
+      borderColor: Color(0xFFFFD700),
+      accentGold: Color(0xFFFFD700),
+      subGold: Color(0xFFFFE082),
+      iqamaColor: Color(0xFFE1BEE7),
+      dateBadgeBg: Color(0xFF42215E),
+    ),
+  ];
+}
+
+// -------------------------------------------------------------
 // الشاشة الرئيسية HomeScreen
 // -------------------------------------------------------------
 class HomeScreen extends StatefulWidget {
@@ -724,6 +900,7 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isAlarmScreenOpen = false;
   bool _isDownloadingImage = false;
   final GlobalKey _scheduleRepaintKey = GlobalKey();
+  ImperialTheme _selectedImperialTheme = ImperialTheme.themes.first;
 
   bool _isNotificationGranted = false;
   bool _isOverlayGranted = false;
@@ -1347,6 +1524,21 @@ class _HomeScreenState extends State<HomeScreen>
     return '$hour:$minute $period';
   }
 
+  String _calculateIqamaTime(String time24, int iqamaMinutes) {
+    if (iqamaMinutes <= 0) return '';
+    final parts = time24.split(':');
+    int hour = int.parse(parts[0]);
+    int minute = int.parse(parts[1]);
+    int totalMinutes = (hour * 60 + minute + iqamaMinutes) % (24 * 60);
+    int newHour = totalMinutes ~/ 60;
+    int newMinute = totalMinutes % 60;
+    final period = newHour >= 12 ? 'م' : 'ص';
+    int h12 = newHour % 12;
+    if (h12 == 0) h12 = 12;
+    final minStr = newMinute.toString().padLeft(2, '0');
+    return '$h12:$minStr $period';
+  }
+
   Map<String, dynamic> _getTodayData() {
     final monthList =
         PrayerData.allMonthsTimes[_selectedMonth] ?? PrayerData.septemberTimes;
@@ -1832,14 +2024,15 @@ class _HomeScreenState extends State<HomeScreen>
         final adjusted = _adjustTime(key, rawTime);
         final formatted12 = _format12Hour(adjusted);
         final isNext = (nextPrayerKey == key);
-        final iqama = PrayerData.iqamaMinutes[key] ?? 0;
+        final iqamaMinutes = PrayerData.iqamaMinutes[key] ?? 0;
+        final iqamaTime = _calculateIqamaTime(adjusted, iqamaMinutes);
 
         return _buildPrayerCardItem(
           name: name,
           icon: icon,
           time12: formatted12,
           isNext: isNext,
-          iqamaMinutes: iqama,
+          iqamaTime: iqamaTime,
         );
       }).toList(),
     );
@@ -1850,10 +2043,10 @@ class _HomeScreenState extends State<HomeScreen>
     required String icon,
     required String time12,
     required bool isNext,
-    required int iqamaMinutes,
+    required String iqamaTime,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 9),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isNext
@@ -1878,54 +2071,49 @@ class _HomeScreenState extends State<HomeScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Prayer name & icon
           Row(
             children: [
-              Text(icon, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 12),
+              Text(icon, style: const TextStyle(fontSize: 26)),
+              const SizedBox(width: 14),
               Text(
                 name,
                 style: GoogleFonts.cairo(
-                  fontSize: 16,
-                  fontWeight: isNext ? FontWeight.bold : FontWeight.w600,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: isNext ? const Color(0xFFFFD700) : Colors.white,
                 ),
               ),
             ],
           ),
-          Row(
+          // Prayer time & Iqama time stacked
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (_showIqama && iqamaMinutes > 0)
-                Container(
-                  margin: const EdgeInsets.only(left: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFD700).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: const Color(0xFFFFD700).withOpacity(0.4),
-                      width: 0.8,
-                    ),
-                  ),
-                  child: Text(
-                    'إقامة $iqamaMinutes د',
-                    style: GoogleFonts.cairo(
-                      fontSize: 11,
-                      color: const Color(0xFFFFE082),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
               Text(
                 time12,
                 style: GoogleFonts.cairo(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
                   color: isNext
                       ? const Color(0xFF00D68F)
                       : const Color(0xFFFFD700),
                 ),
               ),
+              if (_showIqama && iqamaTime.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  iqamaTime,
+                  style: GoogleFonts.cairo(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: isNext
+                        ? const Color(0xFF80E8BA)
+                        : const Color(0xFFFFD54F),
+                  ),
+                ),
+              ],
             ],
           ),
         ],
@@ -1934,12 +2122,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildTomorrowFajrCard(String tomorrowFajr24) {
+    final tomorrowFajrIqama = _calculateIqamaTime(tomorrowFajr24, PrayerData.iqamaMinutes['fajr'] ?? 20);
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF14243B).withOpacity(0.6),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF64B5F6).withOpacity(0.4)),
       ),
       child: Row(
@@ -1947,25 +2136,42 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           Row(
             children: [
-              const Text('🌅', style: TextStyle(fontSize: 20)),
-              const SizedBox(width: 10),
+              const Text('🌅', style: TextStyle(fontSize: 24)),
+              const SizedBox(width: 12),
               Text(
                 'فجر الغد',
                 style: GoogleFonts.cairo(
-                  fontSize: 15,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF90CAF9),
                 ),
               ),
             ],
           ),
-          Text(
-            _format12Hour(tomorrowFajr24),
-            style: GoogleFonts.cairo(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _format12Hour(tomorrowFajr24),
+                style: GoogleFonts.cairo(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
+              ),
+              if (_showIqama && tomorrowFajrIqama.isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(
+                  tomorrowFajrIqama,
+                  style: GoogleFonts.cairo(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF90CAF9),
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),
@@ -2028,7 +2234,7 @@ class _HomeScreenState extends State<HomeScreen>
               style: GoogleFonts.cairo(fontSize: 14, color: Colors.white),
             ),
             subtitle: Text(
-              'عرض دقائق الإقامة بجوار كل صلاة',
+              'عرض وقت الإقامة تحت وقت كل صلاة (زي العصر 4:00 والإقامة 4:15)',
               style: GoogleFonts.cairo(fontSize: 11, color: Colors.white54),
             ),
             value: _showIqama,
@@ -2360,7 +2566,7 @@ class _HomeScreenState extends State<HomeScreen>
       width: double.infinity,
       height: 48,
       child: ElevatedButton.icon(
-        onPressed: _isDownloadingImage ? null : () => _captureAndSaveScheduleImage(todayData, arabicDate),
+        onPressed: _isDownloadingImage ? null : () => _showThemeSelectionSheet(todayData, arabicDate),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF00A86B),
           foregroundColor: Colors.white,
@@ -2389,11 +2595,160 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  void _showThemeSelectionSheet(Map<String, dynamic> todayData, String arabicDate) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+          decoration: const BoxDecoration(
+            color: Color(0xFF14122E),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(28),
+              topRight: Radius.circular(28),
+            ),
+            border: Border(
+              top: BorderSide(color: Color(0xFFFFD700), width: 1.5),
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('🎨', style: TextStyle(fontSize: 22)),
+                    const SizedBox(width: 8),
+                    Text(
+                      'اختر الخلفية الملكية للبطاقة',
+                      style: GoogleFonts.cairo(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFFFD700),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'اختر المظهر المفضل من بين 12 خلفية إمبراطورية فاخرة ليتم حفظ الصورة بها في المعرض',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.cairo(
+                    fontSize: 12,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.52,
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 2.1,
+                    ),
+                    itemCount: ImperialTheme.themes.length,
+                    itemBuilder: (context, index) {
+                      final theme = ImperialTheme.themes[index];
+                      final isSelected = theme.id == _selectedImperialTheme.id;
+
+                      return InkWell(
+                        onTap: () async {
+                          Navigator.pop(ctx);
+                          setState(() {
+                            _selectedImperialTheme = theme;
+                          });
+                          await _captureAndSaveScheduleImage(todayData, arabicDate);
+                        },
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [theme.bgStart, theme.bgEnd],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: isSelected ? const Color(0xFFFFD700) : theme.borderColor.withOpacity(0.4),
+                              width: isSelected ? 2.2 : 1.2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isSelected ? const Color(0xFFFFD700).withOpacity(0.3) : Colors.black45,
+                                blurRadius: isSelected ? 8 : 4,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 22,
+                                height: 22,
+                                decoration: BoxDecoration(
+                                  color: theme.cardBg,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: theme.accentGold, width: 1.5),
+                                ),
+                                child: isSelected
+                                    ? const Icon(Icons.check, size: 14, color: Color(0xFFFFD700))
+                                    : null,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  theme.name,
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 13,
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _captureAndSaveScheduleImage(Map<String, dynamic> todayData, String arabicDate) async {
     setState(() => _isDownloadingImage = true);
 
     try {
-      await Future.delayed(const Duration(milliseconds: 150));
+      await Future.delayed(const Duration(milliseconds: 250));
       final boundary = _scheduleRepaintKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) {
         _showSnackBar('تعذر تجهيز الصورة، حاول مجدداً');
@@ -2418,7 +2773,7 @@ class _HomeScreenState extends State<HomeScreen>
       });
 
       if (success == true) {
-        _showSnackBar('✅ تم حفظ ميعاد صلاة اليوم في المعرض بنجاح');
+        _showSnackBar('✅ تم حفظ ميعاد صلاة اليوم في المعرض بنجاح (${_selectedImperialTheme.name})');
       } else {
         _showSnackBar('تعذر حفظ الصورة');
       }
@@ -2432,17 +2787,23 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildShareableScheduleCard(Map<String, dynamic> todayData, String arabicDate) {
+    final theme = _selectedImperialTheme;
+
     return Container(
       width: 500,
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
       decoration: BoxDecoration(
-        color: const Color(0xFF0D0B1C),
+        gradient: LinearGradient(
+          colors: [theme.bgStart, theme.bgEnd],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.5), width: 2),
+        border: Border.all(color: theme.accentGold.withOpacity(0.65), width: 2.2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.7),
-            blurRadius: 20,
+            color: Colors.black.withOpacity(0.85),
+            blurRadius: 24,
             offset: const Offset(0, 10),
           ),
         ],
@@ -2454,92 +2815,92 @@ class _HomeScreenState extends State<HomeScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              Text('🕌', style: TextStyle(fontSize: 22)),
+              Text('🕌', style: TextStyle(fontSize: 24)),
               SizedBox(width: 10),
-              Text('✨', style: TextStyle(fontSize: 18)),
+              Text('✨', style: TextStyle(fontSize: 20)),
               SizedBox(width: 10),
-              Text('🌙', style: TextStyle(fontSize: 26)),
+              Text('🌙', style: TextStyle(fontSize: 30)),
               SizedBox(width: 10),
-              Text('✨', style: TextStyle(fontSize: 18)),
+              Text('✨', style: TextStyle(fontSize: 20)),
               SizedBox(width: 10),
-              Text('🕌', style: TextStyle(fontSize: 22)),
+              Text('🕌', style: TextStyle(fontSize: 24)),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             'مواقيت الصلاة - الأقصر',
             style: GoogleFonts.amiri(
-              fontSize: 36,
+              fontSize: 38,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFFFFD700),
+              color: theme.accentGold,
             ),
           ),
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('⭐', style: TextStyle(fontSize: 24, color: Color(0xFFFFD700))),
+              Text('⭐', style: TextStyle(fontSize: 26, color: theme.accentGold)),
               const SizedBox(width: 8),
               Text(
                 'حسين الشعار ابو العبادلة',
                 style: GoogleFonts.amiri(
-                  fontSize: 28,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFFFFE082),
+                  color: theme.subGold,
                 ),
               ),
               const SizedBox(width: 8),
-              const Text('⭐', style: TextStyle(fontSize: 24, color: Color(0xFFFFD700))),
+              Text('⭐', style: TextStyle(fontSize: 26, color: theme.accentGold)),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
             decoration: BoxDecoration(
-              color: const Color(0xFF003B2B).withOpacity(0.5),
+              color: const Color(0xFF003B2B).withOpacity(0.55),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFF00A86B), width: 1.5),
+              border: Border.all(color: const Color(0xFF00D68F), width: 1.5),
             ),
             child: Text(
               'محافظة الأقصر - شهر ${PrayerData.monthNames[_selectedMonth] ?? "سبتمبر"}',
               style: GoogleFonts.cairo(
-                fontSize: 14,
+                fontSize: 15,
                 color: const Color(0xFF00D68F),
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFD700).withOpacity(0.08),
+              color: theme.accentGold.withOpacity(0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.3)),
+              border: Border.all(color: theme.accentGold.withOpacity(0.35)),
             ),
             child: Text(
               '﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾',
               textAlign: TextAlign.center,
               style: GoogleFonts.amiri(
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFFFFECB3),
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          // Date Badge (Enlarged & Elegant)
+          const SizedBox(height: 14),
+          // Date Badge (Large & Prominent)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFF191636),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFFFD700).withOpacity(0.35), width: 1.2),
+              color: theme.dateBadgeBg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: theme.accentGold.withOpacity(0.45), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFFD700).withOpacity(0.08),
-                  blurRadius: 8,
+                  color: theme.accentGold.withOpacity(0.12),
+                  blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -2547,14 +2908,14 @@ class _HomeScreenState extends State<HomeScreen>
             child: Text(
               arabicDate,
               style: GoogleFonts.cairo(
-                fontSize: 19,
+                fontSize: 21,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFFFFD700),
+                color: theme.accentGold,
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          // Prayer Cards List (Enlarged Prayer Names & Times)
+          const SizedBox(height: 18),
+          // Prayer Cards List with Large Fonts & Actual Iqama Time
           ...PrayerData.prayerMeta.map((meta) {
             final key = meta['key']!;
             final name = meta['name']!;
@@ -2562,81 +2923,77 @@ class _HomeScreenState extends State<HomeScreen>
             final rawTime = todayData[key]!;
             final adjusted = _adjustTime(key, rawTime);
             final formatted12 = _format12Hour(adjusted);
-            final iqama = PrayerData.iqamaMinutes[key] ?? 0;
+            final iqamaMinutes = PrayerData.iqamaMinutes[key] ?? 0;
+            final iqamaTime = _calculateIqamaTime(adjusted, iqamaMinutes);
 
             return Container(
-              margin: const EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: 9),
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
               decoration: BoxDecoration(
-                color: const Color(0xFF14122E),
-                borderRadius: BorderRadius.circular(14),
+                color: theme.cardBg,
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFFFD700).withOpacity(0.25),
+                  color: theme.borderColor.withOpacity(0.35),
+                  width: 1.2,
                 ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Prayer icon & name (Large font)
                   Row(
                     children: [
-                      Text(icon, style: const TextStyle(fontSize: 25)),
-                      const SizedBox(width: 12),
+                      Text(icon, style: const TextStyle(fontSize: 27)),
+                      const SizedBox(width: 14),
                       Text(
                         name,
                         style: GoogleFonts.cairo(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
-                  Row(
+                  // Prayer time & Iqama time stacked
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (_showIqama && iqama > 0)
-                        Container(
-                          margin: const EdgeInsets.only(left: 10),
-                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFD700).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: const Color(0xFFFFD700).withOpacity(0.4),
-                              width: 0.8,
-                            ),
-                          ),
-                          child: Text(
-                            'إقامة $iqama د',
-                            style: GoogleFonts.cairo(
-                              fontSize: 12,
-                              color: const Color(0xFFFFE082),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                       Text(
                         formatted12,
                         style: GoogleFonts.cairo(
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFFFFD700),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          color: theme.accentGold,
                         ),
                       ),
+                      if (_showIqama && iqamaTime.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          iqamaTime,
+                          style: GoogleFonts.cairo(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: theme.iqamaColor,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
               ),
             );
           }),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 '🤲 نسألكم الدعاء • مجموعة الشيخ حسين 🤲',
                 style: GoogleFonts.cairo(
-                  fontSize: 11,
-                  color: Colors.white54,
+                  fontSize: 12,
+                  color: Colors.white60,
                   fontWeight: FontWeight.w600,
                 ),
               ),
