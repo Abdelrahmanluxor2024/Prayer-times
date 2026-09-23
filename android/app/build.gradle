@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.sheikhhussein.prayertimes"
-    compileSdk 36
+    compileSdk 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -43,7 +43,7 @@ android {
     defaultConfig {
         applicationId "com.sheikhhussein.prayertimes"
         minSdk 21
-        targetSdk 36
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
